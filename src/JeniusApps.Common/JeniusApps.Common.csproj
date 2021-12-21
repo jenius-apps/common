@@ -2,8 +2,37 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>JeniusApps.Common</RootNamespace>
+    <PackageId>JeniusApps.Common</PackageId>
+    <AssemblyName>JeniusApps.Common</AssemblyName>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.1-preview</Version>
+    <PackageTags>jeniusapps,apps,common</PackageTags>
+    <RepositoryUrl>https://github.com/jenius-apps/common</RepositoryUrl>
+    <Authors>Daniel Paulino</Authors>
+    <Company>JeniusApps</Company>
+    <Copyright>© Jenius Apps</Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
+    <Description>A .NET Standard 2.0 library of common components used to build apps.</Description>
+    <IsPackable>true</IsPackable>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>

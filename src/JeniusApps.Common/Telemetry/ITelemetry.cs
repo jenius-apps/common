@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace JeniusApps.Common.Telemetry
 {
+    /// <summary>
+    /// Telemetry interface.
+    /// </summary>
     public interface ITelemetry
     {
         /// <summary>
