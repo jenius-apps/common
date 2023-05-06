@@ -143,6 +143,7 @@
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Telemetry\AppCenterTelemetry.cs" />
     <Compile Include="Tools\Navigator.cs" />
+    <Compile Include="Tools\NavigatorFactory.cs" />
     <Compile Include="Tools\ReswLocalizer.cs" />
     <EmbeddedResource Include="Properties\JeniusApps.Common.Uwp.rd.xml" />
   </ItemGroup>
