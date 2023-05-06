@@ -17,7 +17,7 @@ namespace JeniusApps.Common.Tools
         /// Initializes the frame that will be used for navigation.
         /// </summary>
         /// <param name="frame">The frame to navigate.</param>
-        void InitializeFrame(object frame);
+        void SetFrame(object frame);
 
         /// <summary>
         /// Navigates the frame to the given page.

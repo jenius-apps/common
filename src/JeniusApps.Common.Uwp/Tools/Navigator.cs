@@ -21,7 +21,7 @@ namespace JeniusApps.Common.Tools.Uwp
         }
 
         /// <inheritdoc/>
-        public void InitializeFrame(object frame) => _frame ??= frame;
+        public void SetFrame(object frame) => _frame = frame;
 
         /// <inheritdoc/>
         public void NavigateTo(string pageKey, object? navArgs = null, PageTransition transition = PageTransition.None)

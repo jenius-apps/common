@@ -11,13 +11,18 @@ namespace JeniusApps.Common.Tools.Uwp
         private readonly Dictionary<string, INavigator> _navigators = new();
 
         /// <inheritdoc/>
-        public INavigator Create(
+        public INavigator GetOrCreate(
             string navigatorName, 
             object? constructorParameter, 
             object? frame)
         {
             if (_navigators.TryGetValue(navigatorName, out INavigator navigator))
             {
+                if (frame is not null)
+                {
+                    navigator.SetFrame(frame);
+                }
+
                 return navigator;
             }
 
@@ -25,7 +30,7 @@ namespace JeniusApps.Common.Tools.Uwp
                 frame is Frame f)
             {
                 var newNavigator = new Navigator(dictionary);
-                newNavigator.InitializeFrame(f);
+                newNavigator.SetFrame(f);
                 _navigators.TryAdd(navigatorName, newNavigator);
                 return newNavigator;
             }
