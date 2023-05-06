@@ -24,7 +24,8 @@ namespace JeniusApps.Common.Tools
         /// </summary>
         /// <param name="pageKey">The page to naviate to.</param>
         /// <param name="navArgs">Optional. An object that will be passed to the destination page.</param>
-        void NavigateTo(string pageKey, object? navArgs = null);
+        /// <param name="transition">Optional. Specifies the transition animation to use.</param>
+        void NavigateTo(string pageKey, object? navArgs = null, PageTransition transition = PageTransition.None);
 
         /// <summary>
         /// Safely goes back one level in the frame's navigation stack.

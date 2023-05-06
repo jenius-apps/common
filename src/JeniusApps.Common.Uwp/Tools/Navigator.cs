@@ -24,7 +24,7 @@ namespace JeniusApps.Common.Tools.Uwp
         public void InitializeFrame(object frame) => _frame ??= frame;
 
         /// <inheritdoc/>
-        public void NavigateTo(string pageKey, object? navArgs = null)
+        public void NavigateTo(string pageKey, object? navArgs = null, PageTransition transition = PageTransition.None)
         {
             if (!_pageTypeMap.TryGetValue(pageKey, out Type pageType))
             {
@@ -33,7 +33,7 @@ namespace JeniusApps.Common.Tools.Uwp
 
             if (_frame is Frame f)
             {
-                f.Navigate(pageType, navArgs, new SuppressNavigationTransitionInfo());
+                f.Navigate(pageType, navArgs, ToTransitionInfo(transition));
                 PageNavigated?.Invoke(this, pageKey);
             }
         }
