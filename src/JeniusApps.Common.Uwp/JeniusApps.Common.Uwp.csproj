@@ -145,6 +145,7 @@
     <Compile Include="Tools\Navigator.cs" />
     <Compile Include="Tools\NavigatorFactory.cs" />
     <Compile Include="Tools\ReswLocalizer.cs" />
+    <Compile Include="Tools\UriLauncher.cs" />
     <Compile Include="UI\UIExtensions.cs" />
     <EmbeddedResource Include="Properties\JeniusApps.Common.Uwp.rd.xml" />
   </ItemGroup>
