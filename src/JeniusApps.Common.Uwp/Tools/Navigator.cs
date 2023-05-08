@@ -53,7 +53,9 @@ namespace JeniusApps.Common.Tools.Uwp
             {
                 PageTransition.None => new SuppressNavigationTransitionInfo(),
                 PageTransition.Drill => new DrillInNavigationTransitionInfo(),
-                PageTransition.Slide => new SlideNavigationTransitionInfo(),
+                PageTransition.SlideFromBottom => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom },
+                PageTransition.SlideFromLeft => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromLeft },
+                PageTransition.SlideFromRight => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight },
                 _ => new SuppressNavigationTransitionInfo()
             };
         }

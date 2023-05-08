@@ -50,8 +50,18 @@ namespace JeniusApps.Common.Tools
         Drill,
 
         /// <summary>
-        /// Represents a slide left or right transition animation.
+        /// Represents a slide from bottom transition animation.
         /// </summary>
-        Slide
+        SlideFromBottom,
+
+        /// <summary>
+        /// Represents a slide from left transition animation.
+        /// </summary>
+        SlideFromLeft,
+
+        /// <summary>
+        /// Represents a slide from right transition animation.
+        /// </summary>
+        SlideFromRight,
     }
 }
