@@ -2,22 +2,24 @@
 using System.Collections.Generic;
 using Windows.Storage;
 
+#nullable enable
+
 namespace JeniusApps.Common.Settings.Uwp
 {
     public class LocalSettings : IUserSettings
     {
-        private readonly IDictionary<string, object> _defaults;
+        private readonly IReadOnlyDictionary<string, object> _defaults;
 
         /// <inheritdoc/>
-        public event EventHandler<string> SettingSet;
+        public event EventHandler<string>? SettingSet;
 
-        public LocalSettings(IDictionary<string, object> defaults)
+        public LocalSettings(IReadOnlyDictionary<string, object> defaults)
         {
-            _defaults = defaults ?? new Dictionary<string, object>();
+            _defaults = defaults;
         }
 
         /// <inheritdoc/>
-        public T Get<T>(string settingKey)
+        public T? Get<T>(string settingKey)
         {
             object result = ApplicationData.Current.LocalSettings.Values[settingKey];
             return result is null ? GetDefault<T>(settingKey) : (T)result;
@@ -31,13 +33,13 @@ namespace JeniusApps.Common.Settings.Uwp
         }
 
         /// <inheritdoc/>
-        public T Get<T>(string settingKey, T defaultOverride)
+        public T? Get<T>(string settingKey, T defaultOverride)
         {
             object result = ApplicationData.Current.LocalSettings.Values[settingKey];
             return result is null ? defaultOverride : (T)result;
         }
 
-        private T GetDefault<T>(string settingKey)
+        private T? GetDefault<T>(string settingKey)
         {
             return _defaults.ContainsKey(settingKey)
                 ? (T)_defaults[settingKey]

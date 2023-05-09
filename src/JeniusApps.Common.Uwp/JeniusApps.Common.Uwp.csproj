@@ -122,7 +122,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>JeniusApps.Common.Uwp</PackageId>
-    <Version>0.0.8-preview</Version>
+    <Version>0.0.11-preview</Version>
     <Authors>Daniel Paulino</Authors>
     <Company>JeniusApps</Company>
     <Description>A C# UWP class library of common components used to build apps.</Description>
@@ -145,6 +145,7 @@
     <Compile Include="Tools\Navigator.cs" />
     <Compile Include="Tools\NavigatorFactory.cs" />
     <Compile Include="Tools\ReswLocalizer.cs" />
+    <Compile Include="Tools\UriLauncher.cs" />
     <Compile Include="Tools\SystemInfoProvider.cs" />
     <Compile Include="UI\UIExtensions.cs" />
     <EmbeddedResource Include="Properties\JeniusApps.Common.Uwp.rd.xml" />
