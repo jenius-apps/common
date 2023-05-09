@@ -145,10 +145,14 @@
     <Compile Include="Tools\Navigator.cs" />
     <Compile Include="Tools\NavigatorFactory.cs" />
     <Compile Include="Tools\ReswLocalizer.cs" />
+    <Compile Include="Tools\SystemInfoProvider.cs" />
     <Compile Include="UI\UIExtensions.cs" />
     <EmbeddedResource Include="Properties\JeniusApps.Common.Uwp.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit.Uwp">
+      <Version>7.1.3</Version>
+    </PackageReference>
     <PackageReference Include="NuGet.Build.Tasks.Pack" Version="6.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
