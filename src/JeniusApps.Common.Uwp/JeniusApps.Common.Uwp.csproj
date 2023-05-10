@@ -142,6 +142,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Telemetry\AppCenterTelemetry.cs" />
+    <Compile Include="Tools\DispatcherQueue.cs" />
     <Compile Include="Tools\Navigator.cs" />
     <Compile Include="Tools\NavigatorFactory.cs" />
     <Compile Include="Tools\ReswLocalizer.cs" />
