@@ -2,7 +2,7 @@
 
 namespace JeniusApps.Common.Tools.Uwp
 {
-    internal class WindowsClipboard : IClipboard
+    public class WindowsClipboard : IClipboard
     {
         /// <inheritdoc/>
         public bool CopyToClipboard(string text)
