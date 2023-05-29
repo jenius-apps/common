@@ -20,18 +20,30 @@ namespace JeniusApps.Common.Tools
         void SetFrame(object frame);
 
         /// <summary>
+        /// Sets an optional inner navigator that can be manipulated.
+        /// </summary>
+        /// <param name="inner">The navigator representing an inner content frame.</param>
+        void SetInnerNavigator(INavigator inner);
+
+        /// <summary>
         /// Navigates the frame to the given page.
         /// </summary>
         /// <param name="pageKey">The page to naviate to.</param>
         /// <param name="navArgs">Optional. An object that will be passed to the destination page.</param>
         /// <param name="transition">Optional. Specifies the transition animation to use.</param>
-        void NavigateTo(string pageKey, object? navArgs = null, PageTransition transition = PageTransition.None);
+        void NavigateTo(
+            string pageKey,
+            object? navArgs = null,
+            PageTransition transition = PageTransition.None);
 
         /// <summary>
         /// Safely goes back one level in the frame's navigation stack.
         /// </summary>
         /// <param name="transition">Optional. The transition to use when navigating back.</param>
-        void GoBack(PageTransition transition = PageTransition.None);
+        /// <param name="innerFrameGoBack">Optional. If true, a GoBack command will be executed on the inner frame as well.</param>
+        void GoBack(
+            PageTransition transition = PageTransition.None,
+            bool innerFrameGoBack = false);
     }
 
     /// <summary>

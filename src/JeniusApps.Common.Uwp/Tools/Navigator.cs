@@ -11,6 +11,7 @@ namespace JeniusApps.Common.Tools.Uwp
     {
         private readonly IReadOnlyDictionary<string, Type> _pageTypeMap;
         private object? _frame;
+        private INavigator? _innerNavigator;
 
         /// <inheritdoc/>
         public event EventHandler<string>? PageNavigated;
@@ -39,13 +40,21 @@ namespace JeniusApps.Common.Tools.Uwp
         }
 
         /// <inheritdoc/>
-        public void GoBack(PageTransition transition = PageTransition.None)
+        public void GoBack(PageTransition transition = PageTransition.None, bool innerFrameGoBack = false)
         {
             if (_frame is Frame f && f.CanGoBack)
             {
                 f.GoBack(ToTransitionInfo(transition));
+
+                if (innerFrameGoBack && _innerNavigator is { } innerNav)
+                {
+                    innerNav.GoBack();
+                }
             }
         }
+
+        /// <inheritdoc/>
+        public void SetInnerNavigator(INavigator inner) => _innerNavigator = inner;
 
         private NavigationTransitionInfo ToTransitionInfo(PageTransition transition)
         {
