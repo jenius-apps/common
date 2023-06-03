@@ -6,7 +6,7 @@ using Windows.Storage;
 
 namespace JeniusApps.Common.Tools.Uwp
 {
-    public class WindowsMediaPlayer
+    public class WindowsMediaPlayer : IMediaPlayer
     {
         private readonly MediaPlayer _player;
 
