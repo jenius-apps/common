@@ -67,5 +67,33 @@ namespace JeniusApps.Common.UI.Uwp
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
+
+        public static Visibility VisibleIfAll(this bool a, bool b)
+        {
+            return a && b
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        public static Visibility VisibleIfAny(this bool a, bool b)
+        {
+            return a || b
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        public static Visibility CollapsedIfAll(this bool a, bool b)
+        {
+            return a && b
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
+
+        public static Visibility CollapsedIfAny(this bool a, bool b)
+        {
+            return a || b
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
     }
 }
