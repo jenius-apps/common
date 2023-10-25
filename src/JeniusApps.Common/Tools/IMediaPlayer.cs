@@ -9,10 +9,20 @@ namespace JeniusApps.Common.Tools
     public interface IMediaPlayer
     {
         /// <summary>
+        /// Raised when the position of the active playback item has changed.
+        /// </summary>
+        event EventHandler<TimeSpan> PositionChanged;
+
+        /// <summary>
         /// Media player's volume.
         /// </summary>
         double Volume { get; set; }
 
+        /// <summary>
+        /// Duration of the current playback item.
+        /// </summary>
+        TimeSpan Duration { get; }
+        
         /// <summary>
         /// Pauses the media player.
         /// </summary>

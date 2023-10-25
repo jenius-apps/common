@@ -10,6 +10,8 @@ namespace JeniusApps.Common.Tools.Uwp
     {
         private readonly MediaPlayer _player;
 
+        public event EventHandler<TimeSpan> PositionChanged;
+
         public WindowsMediaPlayer(bool disableSystemControls = false)
         {
             var player = new MediaPlayer();
@@ -18,7 +20,11 @@ namespace JeniusApps.Common.Tools.Uwp
                 player.CommandManager.IsEnabled = false;
             }
             _player = player;
+            _player.PlaybackSession.PositionChanged += OnPlaybackPositionChanged;
         }
+
+        /// <inheritdoc/>
+        public TimeSpan Duration => _player.PlaybackSession.NaturalDuration;
 
         /// <inheritdoc/>
         public double Volume
@@ -83,6 +89,16 @@ namespace JeniusApps.Common.Tools.Uwp
             var playbackList = new MediaPlaybackList() { AutoRepeatEnabled = true };
             playbackList.Items.Add(item);
             return playbackList;
+        }
+
+        private void OnPlaybackPositionChanged(MediaPlaybackSession sender, object args)
+        {
+            if (sender is null)
+            {
+                return;
+            }
+
+            PositionChanged?.Invoke(sender, sender.Position);
         }
     }
 }
