@@ -122,7 +122,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>JeniusApps.Common.Uwp</PackageId>
-    <Version>0.0.22-preview</Version>
+    <Version>0.0.23-preview</Version>
     <Authors>Daniel Paulino</Authors>
     <Company>JeniusApps</Company>
     <Description>A C# UWP class library of common components used to build apps.</Description>
