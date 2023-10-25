@@ -148,6 +148,7 @@
     <Compile Include="Tools\Navigator.cs" />
     <Compile Include="Tools\NavigatorFactory.cs" />
     <Compile Include="Tools\ReswLocalizer.cs" />
+    <Compile Include="Tools\StartupService.cs" />
     <Compile Include="Tools\UriLauncher.cs" />
     <Compile Include="Tools\SystemInfoProvider.cs" />
     <Compile Include="Tools\WindowsClipboard.cs" />
