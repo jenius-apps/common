@@ -48,7 +48,8 @@ public class ToastService : IToastService
         string launchArg = "",
         string tag = "",
         Uri? audioUri = null,
-        bool audioSilent = false)
+        bool audioSilent = false,
+        int minutesExpiration = 0)
     {
         if (scheduledDateTime is not null &&
             scheduledDateTime <= DateTime.Now)
@@ -76,16 +77,30 @@ public class ToastService : IToastService
         {
             builder.Schedule(scheduledTime, toast =>
             {
-                toast.Tag = tag;
-                toast.ExpirationTime = new DateTimeOffset(scheduledTime).AddMinutes(1);
+                if (!string.IsNullOrEmpty(tag))
+                {
+                    toast.Tag = tag;
+                }
+
+                if (minutesExpiration > 0)
+                {
+                    toast.ExpirationTime = DateTimeOffset.Now.AddMinutes(minutesExpiration);
+                }
             });
         }
         else
         {
             builder.Show(toast =>
             {
-                toast.Tag = tag;
-                toast.ExpirationTime = DateTimeOffset.Now.AddMinutes(1);
+                if (!string.IsNullOrEmpty(tag))
+                {
+                    toast.Tag = tag;
+                }
+                
+                if (minutesExpiration > 0)
+                {
+                    toast.ExpirationTime = DateTimeOffset.Now.AddMinutes(minutesExpiration);
+                }
             });
         }
     }

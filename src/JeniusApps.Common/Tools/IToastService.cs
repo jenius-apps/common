@@ -23,7 +23,8 @@ public interface IToastService
     /// <param name="launchArg">Arguments that will be added to the toast. This is passed onto the app foreground when the toast is clicked.</param>
     /// <param name="tag">A unique ID assigned to the toast that can be used for searching the toast later.</param>
     /// <param name="audioUri">URI for an audio file that will be used as the notification sound.</param>
-    /// <param name="audioSilent">If true, the notification will not make a sound.</param>
+    /// <param name="audioSilent">If true, the notification will not make a sound. Only used when an audioUri is provided.</param>
+    /// <param name="minutesExpiration">Defines how long in minutes that the toast will remain active. After expiration, the toast disappears. A value of 0 minutes no expiration.</param>
     void SendToast(
         string title,
         string message,
@@ -32,7 +33,8 @@ public interface IToastService
         string launchArg = "",
         string tag = "",
         Uri? audioUri = null,
-        bool audioSilent = false);
+        bool audioSilent = false,
+        int minutesExpiration = 0);
 
     /// <summary>
     /// Determines if the toast exists already.
