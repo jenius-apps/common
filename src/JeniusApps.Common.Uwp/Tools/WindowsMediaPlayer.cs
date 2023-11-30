@@ -5,8 +5,6 @@ using System.Timers;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
 
 #nullable enable
 
@@ -15,8 +13,7 @@ namespace JeniusApps.Common.Tools.Uwp;
 public class WindowsMediaPlayer : IMediaPlayer
 {
     private readonly MediaPlayer _player;
-    private Timer? _fadeInTimer;
-    private double _fadeInSingleStep;
+    private readonly Timer _timer = new();
     private double _fadeInTargetVolume;
     private long _fadeInStart;
     private long _fadeInEnd;
@@ -33,6 +30,7 @@ public class WindowsMediaPlayer : IMediaPlayer
         }
         _player = player;
         _player.PlaybackSession.PositionChanged += OnPlaybackPositionChanged;
+        _timer.Elapsed += OnFadeInTimerTick;
     }
 
     /// <inheritdoc/>
@@ -54,17 +52,14 @@ public class WindowsMediaPlayer : IMediaPlayer
             return;
         }
 
-        _fadeInTimer = new Timer();
         var now = DateTime.Now;
         _fadeInStart = now.Ticks;
         _fadeInEnd = now.AddMilliseconds(fadeInDuration).Ticks;
         _startEndDiff = _fadeInEnd - _fadeInStart;
-        _fadeInTimer.Elapsed += OnFadeInTimerTick;
-        _fadeInSingleStep = fadeInTargetVolume.Value / fadeInDuration;
         _fadeInTargetVolume = fadeInTargetVolume.Value;
         _player.Volume = 0;
         _player.Play();
-        _fadeInTimer.Start();
+        _timer.Start();
     }
 
     private void OnFadeInTimerTick(object sender, ElapsedEventArgs e)
@@ -75,14 +70,8 @@ public class WindowsMediaPlayer : IMediaPlayer
 
         if (percent >= 1)
         {
-            if (_fadeInTimer is { } timer)
-            {
-                timer.Elapsed -= OnFadeInTimerTick;
-                timer.Stop();
-            }
-
+            _timer.Stop();
             _player.Volume = _fadeInTargetVolume;
-            _fadeInTimer = null;
             Debug.WriteLine($"#################### stopped");
         }
         else
