@@ -50,7 +50,7 @@ namespace JeniusApps.Common.UI.Uwp
         /// Returns collapsed if object is null. 
         /// Visible, otherwise.
         /// </summary>
-        public static Visibility CollapsedIfNull(this object obj)
+        public static Visibility CollapsedIfNull(this object? obj)
         {
             return obj is null
                 ? Visibility.Collapsed
@@ -61,7 +61,7 @@ namespace JeniusApps.Common.UI.Uwp
         /// Returns visible if object is null. 
         /// Collapsed, otherwise.
         /// </summary>
-        public static Visibility VisibleIfNull(this object obj)
+        public static Visibility VisibleIfNull(this object? obj)
         {
             return obj is null
                 ? Visibility.Visible
