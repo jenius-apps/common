@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Windows.Media.Core;
@@ -13,12 +14,15 @@ namespace JeniusApps.Common.Tools.Uwp;
 public class WindowsMediaPlayer : IMediaPlayer
 {
     private readonly MediaPlayer _player;
-    private readonly Timer _timer = new();
-    private double _fadeTargetVolume;
+    private readonly System.Timers.Timer _timer = new();
+    private double _fadeInTargetVolume;
+    private double _fadeOutStartingVolume;
     private long _fadeStart;
     private long _fadeEnd;
     private long _startEndDiff;
     private bool _fadeIn;
+
+    private CancellationTokenSource _fadeCts = new();
 
     public event EventHandler<TimeSpan>? PositionChanged;
 
@@ -46,9 +50,12 @@ public class WindowsMediaPlayer : IMediaPlayer
     }
 
     /// <inheritdoc/>
-    public void Play(double? fadeInTargetVolume = null, double fadeInDuration = 0)
+    public void Play(double fadeInTargetVolume, double fadeDuration)
     {
-        if (fadeInTargetVolume is null || fadeInTargetVolume <= 0 || fadeInDuration <= 0)
+        _fadeCts.Cancel();
+        _fadeCts = new CancellationTokenSource();
+
+        if (fadeInTargetVolume <= 0 || fadeDuration <= 0)
         {
             _player.Play();
             return;
@@ -57,9 +64,9 @@ public class WindowsMediaPlayer : IMediaPlayer
         _fadeIn = true;
         var now = DateTime.Now;
         _fadeStart = now.Ticks;
-        _fadeEnd = now.AddMilliseconds(fadeInDuration).Ticks;
+        _fadeEnd = now.AddMilliseconds(fadeDuration).Ticks;
         _startEndDiff = _fadeEnd - _fadeStart;
-        _fadeTargetVolume = fadeInTargetVolume.Value;
+        _fadeInTargetVolume = fadeInTargetVolume;
         _player.Volume = 0;
         _player.Play();
         _timer.Start();
@@ -67,6 +74,12 @@ public class WindowsMediaPlayer : IMediaPlayer
 
     private void OnFadeTimerTick(object sender, ElapsedEventArgs e)
     {
+        if (_fadeCts.IsCancellationRequested)
+        {
+            _timer.Stop();
+            return;
+        }
+
         var currentTicks = e.SignalTime.Ticks - _fadeStart;
         double percent = (double)currentTicks / _startEndDiff;
         Debug.WriteLine($"#################### {currentTicks} / {_startEndDiff} = {percent}");
@@ -74,26 +87,30 @@ public class WindowsMediaPlayer : IMediaPlayer
         if (percent >= 1)
         {
             _timer.Stop();
-            _player.Volume = _fadeIn ? _fadeTargetVolume : 0;
+            _player.Volume = _fadeIn ? _fadeInTargetVolume : 0;
             Debug.WriteLine($"#################### stopped");
 
             if (!_fadeIn)
             {
                 _player.Pause();
+                _player.Volume = _fadeOutStartingVolume;
             }
         }
         else
         {
             _player.Volume = _fadeIn
-                ? _fadeTargetVolume * percent
-                : _fadeTargetVolume * (1 - percent);
+                ? _fadeInTargetVolume * percent
+                : _fadeOutStartingVolume * (1 - percent);
             Debug.WriteLine($"#################### volume {_player.Volume}");
         }
     }
 
     /// <inheritdoc/>
-    public void Pause(double fadeOutDuration = 0)
+    public void Pause(double fadeOutDuration)
     {
+        _fadeCts.Cancel();
+        _fadeCts = new CancellationTokenSource();
+
         if (fadeOutDuration <= 0)
         {
             _player.Pause();
@@ -105,8 +122,20 @@ public class WindowsMediaPlayer : IMediaPlayer
         _fadeStart = now.Ticks;
         _fadeEnd = now.AddMilliseconds(fadeOutDuration).Ticks;
         _startEndDiff = _fadeEnd - _fadeStart;
-        _fadeTargetVolume = _player.Volume;
+        _fadeOutStartingVolume = _player.Volume;
         _timer.Start();
+    }
+
+    public void Play()
+    {
+        _fadeCts.Cancel();
+        _player.Play();
+    }
+
+    public void Pause()
+    {
+        _fadeCts.Cancel();
+        _player.Pause();
     }
 
     /// <inheritdoc/>

@@ -22,16 +22,26 @@ public interface IMediaPlayer
     /// Duration of the current playback item.
     /// </summary>
     TimeSpan Duration { get; }
-    
+
     /// <summary>
     /// Pauses the media player.
     /// </summary>
-    void Pause(double fadeOutDuration = 0);
+    void Pause();
 
     /// <summary>
     /// Plays the media player.
     /// </summary>
-    void Play(double? fadeInTargetVolume = null, double fadeInDuration = 0);
+    void Play();
+    
+    /// <summary>
+    /// Pauses the media player.
+    /// </summary>
+    void Pause(double fadeDuration);
+
+    /// <summary>
+    /// Plays the media player.
+    /// </summary>
+    void Play(double fadeInTargetVolume, double fadeDuration);
 
     /// <summary>
     /// Sets the media player's source using the given file path.
