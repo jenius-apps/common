@@ -12,5 +12,6 @@
         <Button Click="OnPlayClicked" Content="Play" />
         <Button Click="OnPlayWithFadeClicked" Content="Play with fade" />
         <Button Click="OnPauseClicked" Content="Pause" />
+        <Button Click="OnPauseWithFadeClicked" Content="Pause with fade" />
     </StackPanel>
 </Page>

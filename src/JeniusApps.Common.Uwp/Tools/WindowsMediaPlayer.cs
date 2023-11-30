@@ -14,10 +14,11 @@ public class WindowsMediaPlayer : IMediaPlayer
 {
     private readonly MediaPlayer _player;
     private readonly Timer _timer = new();
-    private double _fadeInTargetVolume;
-    private long _fadeInStart;
-    private long _fadeInEnd;
+    private double _fadeTargetVolume;
+    private long _fadeStart;
+    private long _fadeEnd;
     private long _startEndDiff;
+    private bool _fadeIn;
 
     public event EventHandler<TimeSpan>? PositionChanged;
 
@@ -30,7 +31,8 @@ public class WindowsMediaPlayer : IMediaPlayer
         }
         _player = player;
         _player.PlaybackSession.PositionChanged += OnPlaybackPositionChanged;
-        _timer.Elapsed += OnFadeInTimerTick;
+        _timer.Elapsed += OnFadeTimerTick;
+        _timer.Interval = 30;
     }
 
     /// <inheritdoc/>
@@ -52,31 +54,39 @@ public class WindowsMediaPlayer : IMediaPlayer
             return;
         }
 
+        _fadeIn = true;
         var now = DateTime.Now;
-        _fadeInStart = now.Ticks;
-        _fadeInEnd = now.AddMilliseconds(fadeInDuration).Ticks;
-        _startEndDiff = _fadeInEnd - _fadeInStart;
-        _fadeInTargetVolume = fadeInTargetVolume.Value;
+        _fadeStart = now.Ticks;
+        _fadeEnd = now.AddMilliseconds(fadeInDuration).Ticks;
+        _startEndDiff = _fadeEnd - _fadeStart;
+        _fadeTargetVolume = fadeInTargetVolume.Value;
         _player.Volume = 0;
         _player.Play();
         _timer.Start();
     }
 
-    private void OnFadeInTimerTick(object sender, ElapsedEventArgs e)
+    private void OnFadeTimerTick(object sender, ElapsedEventArgs e)
     {
-        var currentTicks = e.SignalTime.Ticks - _fadeInStart;
+        var currentTicks = e.SignalTime.Ticks - _fadeStart;
         double percent = (double)currentTicks / _startEndDiff;
         Debug.WriteLine($"#################### {currentTicks} / {_startEndDiff} = {percent}");
 
         if (percent >= 1)
         {
             _timer.Stop();
-            _player.Volume = _fadeInTargetVolume;
+            _player.Volume = _fadeIn ? _fadeTargetVolume : 0;
             Debug.WriteLine($"#################### stopped");
+
+            if (!_fadeIn)
+            {
+                _player.Pause();
+            }
         }
         else
         {
-            _player.Volume = _fadeInTargetVolume * percent;
+            _player.Volume = _fadeIn
+                ? _fadeTargetVolume * percent
+                : _fadeTargetVolume * (1 - percent);
             Debug.WriteLine($"#################### volume {_player.Volume}");
         }
     }
@@ -89,6 +99,14 @@ public class WindowsMediaPlayer : IMediaPlayer
             _player.Pause();
             return;
         }
+
+        _fadeIn = false;
+        var now = DateTime.Now;
+        _fadeStart = now.Ticks;
+        _fadeEnd = now.AddMilliseconds(fadeOutDuration).Ticks;
+        _startEndDiff = _fadeEnd - _fadeStart;
+        _fadeTargetVolume = _player.Volume;
+        _timer.Start();
     }
 
     /// <inheritdoc/>

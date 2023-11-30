@@ -39,12 +39,17 @@ namespace TestApp
 
         private void OnPlayWithFadeClicked(object sender, RoutedEventArgs e)
         {
-            player.Play(0.5, 5000);
+            player.Play(0.5, 1000);
         }
 
         private void OnPauseClicked(object sender, RoutedEventArgs e)
         {
             player.Pause();
+        }
+
+        private void OnPauseWithFadeClicked(object sender, RoutedEventArgs e)
+        {
+            player.Pause(300);
         }
     }
 }
