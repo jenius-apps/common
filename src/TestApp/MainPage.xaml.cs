@@ -29,7 +29,9 @@ namespace TestApp
         {
             this.InitializeComponent();
             player = new WindowsMediaPlayer();
-            player.SetUriSource(new Uri("ms-appx:///Assets/tone.wav"), true);
+
+            // Add your own wav file here.
+            //player.SetUriSource(new Uri("ms-appx:///Assets/tone.wav"), true);
         }
 
         private void OnPlayClicked(object sender, RoutedEventArgs e)
