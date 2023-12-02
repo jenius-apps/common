@@ -1,104 +1,205 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
 
-namespace JeniusApps.Common.Tools.Uwp
+#nullable enable
+
+namespace JeniusApps.Common.Tools.Uwp;
+
+public class WindowsMediaPlayer : IMediaPlayer
 {
-    public class WindowsMediaPlayer : IMediaPlayer
+    private readonly MediaPlayer _player;
+    private readonly System.Timers.Timer _timer = new();
+    private double _fadeInTargetVolume;
+    private double _fadeOutStartingVolume;
+    private long _fadeStart;
+    private long _fadeEnd;
+    private long _startEndDiff;
+    private bool _fadeIn;
+    private CancellationTokenSource _fadeCts = new();
+
+    public event EventHandler<TimeSpan>? PositionChanged;
+
+    public WindowsMediaPlayer(bool disableSystemControls = false)
     {
-        private readonly MediaPlayer _player;
-
-        public event EventHandler<TimeSpan> PositionChanged;
-
-        public WindowsMediaPlayer(bool disableSystemControls = false)
+        var player = new MediaPlayer();
+        if (disableSystemControls)
         {
-            var player = new MediaPlayer();
-            if (disableSystemControls)
-            {
-                player.CommandManager.IsEnabled = false;
-            }
-            _player = player;
-            _player.PlaybackSession.PositionChanged += OnPlaybackPositionChanged;
+            player.CommandManager.IsEnabled = false;
+        }
+        _player = player;
+        _player.PlaybackSession.PositionChanged += OnPlaybackPositionChanged;
+        _timer.Elapsed += OnFadeTimerTick;
+        _timer.Interval = 30;
+    }
+
+    /// <inheritdoc/>
+    public TimeSpan Duration => _player.PlaybackSession.NaturalDuration;
+
+    /// <inheritdoc/>
+    public double Volume
+    {
+        get => _player.Volume;
+        set
+        {
+            _fadeCts.Cancel();
+            _player.Volume = value;
+        }
+    }
+
+    /// <inheritdoc/>
+    public void Play(double fadeInTargetVolume, double fadeDuration)
+    {
+        _fadeCts.Cancel();
+
+        if (fadeInTargetVolume <= 0 || fadeDuration <= 0)
+        {
+            _player.Play();
+            return;
         }
 
-        /// <inheritdoc/>
-        public TimeSpan Duration => _player.PlaybackSession.NaturalDuration;
+        _fadeCts = new CancellationTokenSource();
+        _fadeIn = true;
+        var now = DateTime.Now;
+        _fadeStart = now.Ticks;
+        _fadeEnd = now.AddMilliseconds(fadeDuration).Ticks;
+        _startEndDiff = _fadeEnd - _fadeStart;
+        _fadeInTargetVolume = fadeInTargetVolume;
+        _player.Volume = 0;
+        _player.Play();
+        _timer.Start();
+    }
 
-        /// <inheritdoc/>
-        public double Volume
+    /// <inheritdoc/>
+    public void Pause(double fadeOutDuration)
+    {
+        _fadeCts.Cancel();
+
+        if (fadeOutDuration <= 0)
         {
-            get => _player.Volume;
-            set => _player.Volume = value;
+            _player.Pause();
+            return;
         }
 
-        /// <inheritdoc/>
-        public void Play() => _player.Play();
+        _fadeCts = new CancellationTokenSource();
+        _fadeIn = false;
+        var now = DateTime.Now;
+        _fadeStart = now.Ticks;
+        _fadeEnd = now.AddMilliseconds(fadeOutDuration).Ticks;
+        _startEndDiff = _fadeEnd - _fadeStart;
+        _fadeOutStartingVolume = _player.Volume;
+        _timer.Start();
+    }
 
-        /// <inheritdoc/>
-        public void Pause() => _player.Pause();
+    public void Play()
+    {
+        _fadeCts.Cancel();
+        _player.Play();
+    }
 
-        /// <inheritdoc/>
-        public void Dispose() => _player.Dispose();
+    public void Pause()
+    {
+        _fadeCts.Cancel();
+        _player.Pause();
+    }
 
-        /// <inheritdoc/>
-        public bool SetUriSource(Uri uriSource, bool enableGaplessLoop = false)
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        _fadeCts.Cancel();
+        _player.Dispose();
+    }
+
+    /// <inheritdoc/>
+    public bool SetUriSource(Uri uriSource, bool enableGaplessLoop = false)
+    {
+        try
         {
-            try
-            {
-                var mediaSource = MediaSource.CreateFromUri(uriSource);
-                AssignSource(mediaSource, enableGaplessLoop);
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
+            var mediaSource = MediaSource.CreateFromUri(uriSource);
+            AssignSource(mediaSource, enableGaplessLoop);
+        }
+        catch
+        {
+            return false;
         }
 
-        /// <inheritdoc/>
-        public async Task<bool> SetSourceAsync(string pathToFile, bool enableGaplessLoop = false)
-        {
-            try
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(pathToFile);
-                var mediaSource = MediaSource.CreateFromStorageFile(file);
-                AssignSource(mediaSource, enableGaplessLoop);
-            }
-            catch
-            {
-                return false;
-            }
+        return true;
+    }
 
-            return true;
+    /// <inheritdoc/>
+    public async Task<bool> SetSourceAsync(string pathToFile, bool enableGaplessLoop = false)
+    {
+        try
+        {
+            StorageFile file = await StorageFile.GetFileFromPathAsync(pathToFile);
+            var mediaSource = MediaSource.CreateFromStorageFile(file);
+            AssignSource(mediaSource, enableGaplessLoop);
+        }
+        catch
+        {
+            return false;
         }
 
-        private void AssignSource(MediaSource source, bool enableGaplessLoop)
+        return true;
+    }
+
+    private void AssignSource(MediaSource source, bool enableGaplessLoop)
+    {
+        _player.Source = enableGaplessLoop
+            ? LoopEnabledPlaybackList(source)
+            : source;
+    }
+
+    private MediaPlaybackList LoopEnabledPlaybackList(MediaSource source)
+    {
+        // This code here (combined with a wav source file) allows for gapless playback!
+        var item = new MediaPlaybackItem(source);
+        var playbackList = new MediaPlaybackList() { AutoRepeatEnabled = true };
+        playbackList.Items.Add(item);
+        return playbackList;
+    }
+
+    private void OnPlaybackPositionChanged(MediaPlaybackSession sender, object args)
+    {
+        if (sender is null)
         {
-            _player.Source = enableGaplessLoop
-                ? LoopEnabledPlaybackList(source)
-                : source;
+            return;
         }
 
-        private MediaPlaybackList LoopEnabledPlaybackList(MediaSource source)
+        PositionChanged?.Invoke(sender, sender.Position);
+    }
+
+    private void OnFadeTimerTick(object sender, ElapsedEventArgs e)
+    {
+        if (_fadeCts.IsCancellationRequested)
         {
-            // This code here (combined with a wav source file) allows for gapless playback!
-            var item = new MediaPlaybackItem(source);
-            var playbackList = new MediaPlaybackList() { AutoRepeatEnabled = true };
-            playbackList.Items.Add(item);
-            return playbackList;
+            _timer.Stop();
+            return;
         }
 
-        private void OnPlaybackPositionChanged(MediaPlaybackSession sender, object args)
+        var currentTicks = e.SignalTime.Ticks - _fadeStart;
+        double percent = (double)currentTicks / _startEndDiff;
+
+        if (percent >= 1)
         {
-            if (sender is null)
+            _timer.Stop();
+            _player.Volume = _fadeIn ? _fadeInTargetVolume : 0;
+
+            if (!_fadeIn)
             {
-                return;
+                _player.Pause();
+                _player.Volume = _fadeOutStartingVolume;
             }
-
-            PositionChanged?.Invoke(sender, sender.Position);
+        }
+        else
+        {
+            _player.Volume = _fadeIn
+                ? _fadeInTargetVolume * percent
+                : _fadeOutStartingVolume * (1 - percent);
         }
     }
 }
