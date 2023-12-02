@@ -20,6 +20,7 @@ public class WindowsMediaPlayer : IMediaPlayer
     private long _fadeEnd;
     private long _startEndDiff;
     private bool _fadeIn;
+    private bool _disposeAfterFadeOut;
     private CancellationTokenSource _fadeCts = new();
 
     public event EventHandler<TimeSpan>? PositionChanged;
@@ -75,7 +76,7 @@ public class WindowsMediaPlayer : IMediaPlayer
     }
 
     /// <inheritdoc/>
-    public void Pause(double fadeOutDuration)
+    public void Pause(double fadeOutDuration, bool disposeAfterFadeOut = false)
     {
         _fadeCts.Cancel();
 
@@ -85,6 +86,7 @@ public class WindowsMediaPlayer : IMediaPlayer
             return;
         }
 
+        _disposeAfterFadeOut = true;
         _fadeCts = new CancellationTokenSource();
         _fadeIn = false;
         var now = DateTime.Now;
@@ -193,6 +195,11 @@ public class WindowsMediaPlayer : IMediaPlayer
             {
                 _player.Pause();
                 _player.Volume = _fadeOutStartingVolume;
+
+                if (_disposeAfterFadeOut)
+                {
+                    _player.Dispose();
+                }
             }
         }
         else

@@ -36,7 +36,7 @@ public interface IMediaPlayer
     /// <summary>
     /// Pauses the media player.
     /// </summary>
-    void Pause(double fadeDuration);
+    void Pause(double fadeDuration, bool disposeAfterFadeOut = false);
 
     /// <summary>
     /// Plays the media player.
