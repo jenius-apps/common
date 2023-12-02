@@ -86,7 +86,7 @@ public class WindowsMediaPlayer : IMediaPlayer
             return;
         }
 
-        _disposeAfterFadeOut = true;
+        _disposeAfterFadeOut = disposeAfterFadeOut;
         _fadeCts = new CancellationTokenSource();
         _fadeIn = false;
         var now = DateTime.Now;
