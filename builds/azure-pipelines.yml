@@ -34,6 +34,18 @@ steps:
     solution: '**/JeniusApps.Common.Uwp.csproj'
     configuration: '$(buildConfiguration)'
 
+- task: CopyFiles@2
+  displayName: 'Copying nupkg files to staging directory'
+  inputs:
+    Contents: '**/*.nupkg'
+    TargetFolder: '$(build.artifactStagingDirectory)'
+
+- task: CopyFiles@2
+  displayName: 'Copying snupkg files to staging directory'
+  inputs:
+    Contents: '**/*.snupkg'
+    TargetFolder: '$(build.artifactStagingDirectory)'
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   inputs:
