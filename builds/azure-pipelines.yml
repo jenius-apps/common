@@ -14,7 +14,7 @@ variables:
   - name: solution
     value: '**/*.sln'
   - name: buildPlatform
-    value: 'Any CPU'
+    value: 'AnyCPU'
   - name: buildConfiguration
     value: 'Release'
   - name: appxPackageDir
@@ -30,12 +30,11 @@ steps:
 
 - task: VSBuild@1
   inputs:
-    platform: 'x64'
+    platform: '$(buildPlatform)'
     solution: '**/JeniusApps.Common.Uwp.csproj'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)"'
 
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Publish Artifact: drop'
-#   inputs:
-#     PathtoPublish: '$(build.artifactstagingdirectory)'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
