@@ -46,5 +46,10 @@ namespace JeniusApps.Common.Tools
         /// Returns the local folder path for application data.
         /// </summary>
         string LocalFolderPath();
+
+        /// <summary>
+        /// Returns true if the device's battery saver is active.
+        /// </summary>
+        bool IsOnBatterySaver();
     }
 }
