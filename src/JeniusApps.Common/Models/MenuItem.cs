@@ -15,18 +15,24 @@ namespace JeniusApps.Common.Models
         /// </summary>
         /// <param name="asyncRelayCommand">The command to trigger upon being selected.</param>
         /// <param name="text">The text to display on UI.</param>
-        /// <param name="glyph">The glyph code to display on UI</param>
+        /// <param name="glyph">The glyph code to display on UI.</param>
         /// <param name="tag">A developer-facing tag to help programmaticaly identify this item.</param>
+        /// <param name="tooltipText">Text to display in a tooltip.</param>
+        /// <param name="tooltipSubtitle">Subtitle text to display in a tooltip.</param>
         public MenuItem(
             IRelayCommand asyncRelayCommand,
             string text,
             string glyph,
-            string? tag = null)
+            string? tag = null,
+            string? tooltipText = null,
+            string? tooltipSubtitle = null)
         {
             ActionCommand = asyncRelayCommand;
             Text = text;
             Glyph = glyph;
             Tag = tag;
+            ToolTipText = tooltipText ?? text;
+            ToolTipSubtitle = tooltipSubtitle ?? string.Empty;
         }
 
         /// <summary>
@@ -58,5 +64,15 @@ namespace JeniusApps.Common.Models
         /// The menu's icon.
         /// </summary>
         public string Glyph { get; } = string.Empty;
+
+        /// <summary>
+        /// Text to display in a tooltip.
+        /// </summary>
+        public string ToolTipText { get; } = string.Empty;
+
+        /// <summary>
+        /// Subtitle text to display in a tooltip.
+        /// </summary>
+        public string ToolTipSubtitle { get; } = string.Empty;
     }
 }
