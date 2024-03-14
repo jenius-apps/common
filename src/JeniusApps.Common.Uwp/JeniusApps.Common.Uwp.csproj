@@ -15,7 +15,7 @@
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
-    <LangVersion>11.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -145,6 +145,7 @@
     <Compile Include="Telemetry\AppCenterTelemetry.cs" />
     <Compile Include="Tools\AssetReader.cs" />
     <Compile Include="Tools\DispatcherQueue.cs" />
+    <Compile Include="Tools\MicrosoftStoreUpdater.cs" />
     <Compile Include="Tools\Navigator.cs" />
     <Compile Include="Tools\NavigatorFactory.cs" />
     <Compile Include="Tools\ReswLocalizer.cs" />
@@ -182,6 +183,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
+    </PackageReference>
+    <PackageReference Include="PolySharp">
+      <Version>1.14.1</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
