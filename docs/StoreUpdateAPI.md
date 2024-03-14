@@ -14,8 +14,8 @@ To help nudge users along, the Microsoft Store SDK provides APIs to manually che
 ```csharp
 // Make sure to install this first: https://www.nuget.org/packages/JeniusApps.Common.Uwp
 
-using JeniusApps.Common.Tools
-using JeniusApps.Common.Tools.Uwp
+using JeniusApps.Common.Tools;
+using JeniusApps.Common.Tools.Uwp;
 
 private readonly IAppStoreUpdater _appStoreUpdater;
 
