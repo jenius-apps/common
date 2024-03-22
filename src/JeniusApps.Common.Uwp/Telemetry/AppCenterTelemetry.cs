@@ -5,24 +5,41 @@ using System;
 using System.Collections.Generic;
 using Windows.Globalization;
 
-namespace JeniusApps.Common.Telemetry.Uwp
+namespace JeniusApps.Common.Telemetry.Uwp;
+
+public class AppCenterTelemetry : ITelemetry
 {
-    public class AppCenterTelemetry : ITelemetry
+    private bool _isEnabled = true;
+
+    public AppCenterTelemetry(string apiKey, bool isEnabled = true)
     {
-        public AppCenterTelemetry(string apiKey)
+        _isEnabled = isEnabled;
+        AppCenter.SetCountryCode(new GeographicRegion().CodeTwoLetter);
+        AppCenter.Start(apiKey, typeof(Analytics), typeof(Crashes));
+    }
+
+    public void SetEnabled(bool isEnabled)
+    {
+        _isEnabled = isEnabled;
+    }
+
+    public void TrackError(Exception e, IDictionary<string, string> properties = null)
+    {
+        if (!_isEnabled)
         {
-            AppCenter.SetCountryCode(new GeographicRegion().CodeTwoLetter);
-            AppCenter.Start(apiKey, typeof(Analytics), typeof(Crashes));
+            return;
         }
 
-        public void TrackError(Exception e, IDictionary<string, string> properties = null)
+        Crashes.TrackError(e, properties);
+    }
+
+    public void TrackEvent(string eventName, IDictionary<string, string> properties = null)
+    {
+        if (!_isEnabled)
         {
-            Crashes.TrackError(e, properties);
+            return;
         }
 
-        public void TrackEvent(string eventName, IDictionary<string, string> properties = null)
-        {
-            Analytics.TrackEvent(eventName, properties);
-        }
+        Analytics.TrackEvent(eventName, properties);
     }
 }

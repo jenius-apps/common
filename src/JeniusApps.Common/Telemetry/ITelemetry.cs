@@ -19,4 +19,10 @@ public interface ITelemetry
     /// <param name="eventName">Name of event.</param>
     /// <param name="properties">Optoinal properties associated with the event.</param>
     void TrackEvent(string eventName, IDictionary<string, string>? properties = null);
+
+    /// <summary>
+    /// Sets if telemetry is enabled or not.
+    /// </summary>
+    /// <param name="isEnabled">If true, telemetry is enabled. If falsed, disabled.</param>
+    void SetEnabled(bool isEnabled);
 }
