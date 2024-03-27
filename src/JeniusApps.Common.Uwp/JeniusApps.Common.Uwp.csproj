@@ -142,7 +142,6 @@
     <Compile Include="Authentication\WindowsMsalClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
-    <Compile Include="Telemetry\AppCenterTelemetry.cs" />
     <Compile Include="Tools\AssetReader.cs" />
     <Compile Include="Tools\DispatcherQueue.cs" />
     <Compile Include="Tools\MicrosoftStoreUpdater.cs" />
@@ -171,15 +170,6 @@
     <PackageReference Include="NuGet.Build.Tasks.Pack" Version="6.7.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter">
-      <Version>5.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>5.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>5.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>

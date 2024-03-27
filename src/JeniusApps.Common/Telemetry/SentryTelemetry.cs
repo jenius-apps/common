@@ -1,6 +1,7 @@
 using Sentry;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JeniusApps.Common.Telemetry;
 
@@ -16,7 +17,13 @@ public class SentryTelemetry : ITelemetry
     /// </summary>
     /// <param name="apiKey">The Data Source Name for the Sentry options.</param>
     /// <param name="isEnabled">Determines if telemetry will be sent or not.</param>
-    public SentryTelemetry(string apiKey, bool isEnabled = true)
+    /// <param name="clientName">Sets the project name to be associated with this telemetry session.</param>
+    /// <param name="clientVersion">Sets the version number to be associated with this telemetry session. E.g. 4.1.2</param>
+    public SentryTelemetry(
+        string apiKey,
+        bool isEnabled = true,
+        string clientName = "",
+        string clientVersion = "")
     {
         _isEnabled = isEnabled;
 
@@ -37,7 +44,19 @@ public class SentryTelemetry : ITelemetry
 
             // Recommended to be enabled for desktop client apps.
             options.AutoSessionTracking = true;
+            
+            // Used to differentiate between releases.
+            if (clientName.Length > 0 && clientVersion.Length > 0)
+            {
+                options.Release = $"{clientName}@{clientVersion}";
+            }
         });
+    }
+
+    /// <inheritdoc/>
+    public async Task FlushAsync()
+    {
+        await SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -47,19 +66,19 @@ public class SentryTelemetry : ITelemetry
     }
 
     /// <inheritdoc/>
-    public void TrackError(Exception e, IDictionary<string, string>? properties = null)
+    public void TrackError(
+        Exception e,
+        IDictionary<string, string>? properties = null,
+        IDictionary<string, double>? metrics = null)
     {
-        if (!_isEnabled)
-        {
-            return;
-        }
-
         SentrySdk.CaptureException(e);
-        _ = SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public void TrackEvent(string eventName, IDictionary<string, string>? properties = null)
+    public void TrackEvent(
+        string eventName,
+        IDictionary<string, string>? properties = null,
+        IDictionary<string, double>? metrics = null)
     {
         if (!_isEnabled)
         {
