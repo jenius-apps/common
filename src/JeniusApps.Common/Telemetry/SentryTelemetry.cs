@@ -87,4 +87,10 @@ public class SentryTelemetry : ITelemetry
 
         SentrySdk.Metrics.Increment(eventName, tags: properties);
     }
+
+    /// <inheritdoc/>
+    public void TrackPageView(string page)
+    {
+        TrackEvent(page);
+    }
 }

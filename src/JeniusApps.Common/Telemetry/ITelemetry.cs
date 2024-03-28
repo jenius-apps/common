@@ -43,4 +43,10 @@ public interface ITelemetry
     /// or suspending.
     /// </summary>
     Task FlushAsync();
+
+    /// <summary>
+    /// Tracks the page view event.
+    /// </summary>
+    /// <param name="page">Name of the page.</param>
+    void TrackPageView(string page);
 }
