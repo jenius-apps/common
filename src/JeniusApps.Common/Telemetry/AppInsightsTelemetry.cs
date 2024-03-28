@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 
 namespace JeniusApps.Common.Telemetry;
@@ -20,17 +21,32 @@ public class AppInsightsTelemetry : ITelemetry
     /// </summary>
     /// <param name="apiKey">The instrumentation key your AppInsights instance.</param>
     /// <param name="isEnabled">Determines if events will be tracked.</param>
+    /// <param name="context">Optional context to add to the telemetry client.</param>
     public AppInsightsTelemetry(
         string apiKey,
-        bool isEnabled = true)
+        bool isEnabled = true,
+        TelemetryContext? context = null)
     {
         _isEnabled = isEnabled;
 
         var configuration = new TelemetryConfiguration
         {
-            ConnectionString = $"InstrumentationKey={apiKey}", 
+            ConnectionString = $"InstrumentationKey={apiKey}"
+            
         };
         _tc = new TelemetryClient(configuration);
+
+        if (context is not null)
+        {
+            _tc.Context.Component.Version = context.Component.Version;
+            _tc.Context.Device.Id = context.Device.Id;
+            _tc.Context.Device.OperatingSystem = context.Device.OperatingSystem;
+            _tc.Context.Location.Ip = context.Location.Ip;
+            _tc.Context.Session.Id = context.Session.Id;
+            _tc.Context.Session.IsFirst = context.Session.IsFirst;
+            _tc.Context.User.Id = context.User.Id;
+            _tc.Context.User.AuthenticatedUserId = context.User.AuthenticatedUserId;
+        }
     }
 
     /// <inheritdoc/>
@@ -62,5 +78,16 @@ public class AppInsightsTelemetry : ITelemetry
         }
 
         _tc.TrackEvent(eventName, properties, metrics);
+    }
+
+    /// <inheritdoc/>
+    public void TrackPageView(string page)
+    {
+        if (!_isEnabled)
+        {
+            return;
+        }
+
+        _tc.TrackPageView(page);
     }
 }
