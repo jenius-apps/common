@@ -51,12 +51,11 @@ public class LocalExperimentationService : IExperimentationService
                 return value;
             }
 
-            var newValue = _userSettings.Get(
-                $"experimentation-{experiment}",
-                _rand.Next(0, 2) == 0);
-
-            _cachedResults.TryAdd(experiment, newValue);
-            return newValue;
+            var key = $"experimentation-{experiment}";
+            var newOrStoredValue = _userSettings.Get(key, _rand.Next(0, 2) == 0);
+            _cachedResults.TryAdd(experiment, newOrStoredValue);
+            _userSettings.Set(key, newOrStoredValue);
+            return newOrStoredValue;
         }
     }
 }
