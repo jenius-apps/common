@@ -46,6 +46,11 @@ public class AppInsightsTelemetry : ITelemetry
             _tc.Context.Session.IsFirst = context.Session.IsFirst;
             _tc.Context.User.Id = context.User.Id;
             _tc.Context.User.AuthenticatedUserId = context.User.AuthenticatedUserId;
+            
+            foreach (var property in context.GlobalProperties)
+            {
+                _tc.Context.GlobalProperties.Add(property.Key, property.Value);
+            }
         }
     }
 
