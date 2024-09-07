@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization.Metadata;
 
 namespace JeniusApps.Common.Settings
 {
@@ -39,5 +40,25 @@ namespace JeniusApps.Common.Settings
         /// <param name="defaultOverride">The default override to use if the setting has no value.</param>
         /// <returns>The desired value or returns the default override.</returns>
         T? Get<T>(string settingKey, T defaultOverride);
+
+        /// <summary>
+        /// Retrieves the value for the desired settings key
+        /// and performs json deserialization on the stored value.
+        /// </summary>
+        /// <typeparam name="T">Type of the value.</typeparam>
+        /// <param name="settingKey">The settings key.</param>
+        /// <param name="jsonTypeInfo">The <see cref="JsonTypeInfo{T}"/> instance to deserialize <typeparamref name="T"/> values.</param>
+        /// <returns>The desired value or returns the default.</returns>
+        T? GetAndDeserialize<T>(string settingKey, JsonTypeInfo<T> jsonTypeInfo);
+
+        /// <summary>
+        /// Saves settings into persistent local storage
+        /// after serializing the object.
+        /// </summary>
+        /// <typeparam name="T">Type of the value.</typeparam>
+        /// <param name="settingKey">The settings key.</param>
+        /// <param name="value">The value to save.</param>
+        /// <param name="jsonTypeInfo">The <see cref="JsonTypeInfo{T}"/> instance to serialize <typeparamref name="T"/> values.</param>
+        void SetAndSerialize<T>(string settingKey, T value, JsonTypeInfo<T> jsonTypeInfo);
     }
 }
