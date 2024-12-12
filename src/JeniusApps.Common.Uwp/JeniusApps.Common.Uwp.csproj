@@ -153,6 +153,7 @@
     <Compile Include="Tools\UriLauncher.cs" />
     <Compile Include="Tools\SystemInfoProvider.cs" />
     <Compile Include="Tools\WindowsClipboard.cs" />
+    <Compile Include="Tools\WindowsCredentialStorage.cs" />
     <Compile Include="Tools\WindowsMediaPlayer.cs" />
     <Compile Include="UI\UIExtensions.cs" />
     <EmbeddedResource Include="Properties\JeniusApps.Common.Uwp.rd.xml" />
