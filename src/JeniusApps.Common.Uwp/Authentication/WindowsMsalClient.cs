@@ -1,5 +1,6 @@
 ﻿using JeniusApps.Common.Telemetry;
 using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Broker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ public class WindowsMsalClient : IMsalClient
         _msalSdkClient = PublicClientApplicationBuilder
             .Create(_clientId)
             .WithAuthority(authorityUrl)
-            .WithBroker() // See note below.
+            .WithBroker(new BrokerOptions(BrokerOptions.OperatingSystems.Windows)) // See note below.
             .Build();
 
         // ****** WithBroker notes ******
