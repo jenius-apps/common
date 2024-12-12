@@ -6,29 +6,28 @@ using Windows.Storage;
 
 #nullable enable
 
-namespace JeniusApps.Common.Tools.Uwp
+namespace JeniusApps.Common.Tools.Uwp;
+
+public class AssetReader : IAssetsReader
 {
-    public class AssetReader : IAssetsReader
+    /// <inheritdoc/>
+    public async Task<string> ReadFileAsync(string relativePath)
     {
-        /// <inheritdoc/>
-        public async Task<string> ReadFileAsync(string relativePath)
+        StorageFolder currentFolder = Package.Current.InstalledLocation;
+        var splits = relativePath.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
+        StorageFile? file = null;
+
+        for (int i = 0; i < splits.Length; i++)
         {
-            StorageFolder currentFolder = Package.Current.InstalledLocation;
-            var splits = relativePath.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
-            StorageFile? file = null;
-
-            for (int i = 0; i < splits.Length; i++)
+            if (splits.Length - 1 == i)
             {
-                if (splits.Length - 1 == i)
-                {
-                    file = await currentFolder.GetFileAsync(splits[i]);
-                    break;
-                }
-
-                currentFolder = await currentFolder.GetFolderAsync(splits[i]);
+                file = await currentFolder.GetFileAsync(splits[i]);
+                break;
             }
 
-            return await FileIO.ReadTextAsync(file);
+            currentFolder = await currentFolder.GetFolderAsync(splits[i]);
         }
+
+        return await FileIO.ReadTextAsync(file);
     }
 }

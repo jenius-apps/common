@@ -1,31 +1,30 @@
 ﻿using Windows.ApplicationModel.Resources;
 
-namespace JeniusApps.Common.Tools.Uwp
+namespace JeniusApps.Common.Tools.Uwp;
+
+public class ReswLocalizer : ILocalizer
 {
-    public class ReswLocalizer : ILocalizer
+    private readonly ResourceLoader _resourceLoader;
+
+    public ReswLocalizer()
     {
-        private readonly ResourceLoader _resourceLoader;
+        _resourceLoader = ResourceLoader.GetForCurrentView();
+    }
 
-        public ReswLocalizer()
+    /// <inheritdoc/>
+    public string GetString(string key)
+    {
+        if (string.IsNullOrEmpty(key))
         {
-            _resourceLoader = ResourceLoader.GetForCurrentView();
+            return string.Empty;
         }
 
-        /// <inheritdoc/>
-        public string GetString(string key)
-        {
-            if (string.IsNullOrEmpty(key))
-            {
-                return string.Empty;
-            }
+        return _resourceLoader.GetString(key);
+    }
 
-            return _resourceLoader.GetString(key);
-        }
-
-        /// <inheritdoc/>
-        public string GetString(string key, string formatParam)
-        {
-            return string.Format(_resourceLoader.GetString(key), formatParam);
-        }
+    /// <inheritdoc/>
+    public string GetString(string key, string formatParam)
+    {
+        return string.Format(_resourceLoader.GetString(key), formatParam);
     }
 }
