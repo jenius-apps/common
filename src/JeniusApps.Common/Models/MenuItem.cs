@@ -17,18 +17,21 @@ public partial class MenuItem : ObservableObject
     /// <param name="tag">A developer-facing tag to help programmaticaly identify this item.</param>
     /// <param name="tooltipText">Text to display in a tooltip.</param>
     /// <param name="tooltipSubtitle">Subtitle text to display in a tooltip.</param>
+    /// <param name="automationName">The text to be used for the menu item's AutomationProperties.Name.</param>
     public MenuItem(
         IRelayCommand asyncRelayCommand,
         string text,
         string glyph,
         string? tag = null,
         string? tooltipText = null,
-        string? tooltipSubtitle = null)
+        string? tooltipSubtitle = null,
+        string? automationName = null)
     {
         ActionCommand = asyncRelayCommand;
         Text = text;
         Glyph = glyph;
         Tag = tag;
+        AutomationName = automationName ?? text;
         ToolTipText = tooltipText ?? text;
         ToolTipSubtitle = tooltipSubtitle ?? string.Empty;
     }
@@ -51,6 +54,12 @@ public partial class MenuItem : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(BadgeCountVisible))]
     private int _badgeCount;
+
+    /// <summary>
+    /// The text to be used for the menu item's AutomationProperties.Name.
+    /// </summary>
+    [ObservableProperty]
+    private string _automationName = string.Empty;
 
     /// <summary>
     /// Determines if the badge count should be visible.
