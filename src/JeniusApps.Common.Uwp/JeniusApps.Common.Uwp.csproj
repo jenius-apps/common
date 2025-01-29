@@ -144,6 +144,7 @@
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Tools\AssetReader.cs" />
     <Compile Include="Tools\DispatcherQueue.cs" />
+    <Compile Include="Tools\LocalFileWriter.cs" />
     <Compile Include="Tools\MicrosoftStoreUpdater.cs" />
     <Compile Include="Tools\Navigator.cs" />
     <Compile Include="Tools\NavigatorFactory.cs" />
