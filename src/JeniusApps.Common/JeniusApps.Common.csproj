@@ -7,7 +7,7 @@
     <AssemblyName>JeniusApps.Common</AssemblyName>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.43-preview</Version>
+    <Version>0.0.44-preview</Version>
     <PackageTags>jeniusapps,apps,common</PackageTags>
     <RepositoryUrl>https://github.com/jenius-apps/common</RepositoryUrl>
     <Authors>Daniel Paulino</Authors>
@@ -34,6 +34,10 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
+    <PackageReference Include="PolySharp" Version="1.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
 	<PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 
