@@ -86,6 +86,14 @@ public interface ICache<T>
     /// <param name="token">A cancellation token.</param>
     /// <returns>True if operation was successful.</returns>
     Task<bool> OverwriteAsync(IReadOnlyList<T> items, CancellationToken token);
+
+    /// <summary>
+    /// If the item exists, attempts to replace it with the new item.
+    /// </summary>
+    /// <param name="newItem">The new item that will overwrite the old item.</param>
+    /// <param name="token">A cancellation token.</param>
+    /// <returns>True if the update was successful.</returns>
+    Task<bool> UpdateAsync(T newItem, CancellationToken token);
 }
 
 /// <summary>
