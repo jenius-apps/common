@@ -53,5 +53,15 @@ namespace TestApp
         {
             player.Pause(300);
         }
+
+        private void OnNavigateToChildPage(object sender, RoutedEventArgs e)
+        {
+            App.Navigator.NavigateTo(nameof(ChildPage));
+        }
+
+        private void OnGoForward(object sender, RoutedEventArgs e)
+        {
+            App.Navigator.GoForward();
+        }
     }
 }

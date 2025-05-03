@@ -1,72 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
 #nullable enable
 
-namespace JeniusApps.Common.Tools.Uwp
+namespace JeniusApps.Common.Tools.Uwp;
+
+public class Navigator : INavigator
 {
-    public class Navigator : INavigator
+    private readonly IReadOnlyDictionary<string, Type> _pageTypeMap;
+    private object? _frame;
+    private INavigator? _innerNavigator;
+
+    /// <inheritdoc/>
+    public event EventHandler<string>? PageNavigated;
+
+    public Navigator(IReadOnlyDictionary<string, Type> pageTypeMap)
     {
-        private readonly IReadOnlyDictionary<string, Type> _pageTypeMap;
-        private object? _frame;
-        private INavigator? _innerNavigator;
+        _pageTypeMap = pageTypeMap;
+    }
 
-        /// <inheritdoc/>
-        public event EventHandler<string>? PageNavigated;
+    /// <inheritdoc/>
+    public void SetFrame(object frame) => _frame = frame;
 
-        public Navigator(IReadOnlyDictionary<string, Type> pageTypeMap)
+    /// <inheritdoc/>
+    public string GetCurrentPageKey()
+    {
+        if (_frame is Frame f &&
+            _pageTypeMap.FirstOrDefault(x => x.Value == f.CurrentSourcePageType) is { Key: string key })
         {
-            _pageTypeMap = pageTypeMap;
+            return key;
         }
 
-        /// <inheritdoc/>
-        public void SetFrame(object frame) => _frame = frame;
+        return string.Empty;
+    }
 
-        /// <inheritdoc/>
-        public void NavigateTo(string pageKey, object? navArgs = null, PageTransition transition = PageTransition.None)
+    /// <inheritdoc/>
+    public void NavigateTo(string pageKey, object? navArgs = null, PageTransition transition = PageTransition.None)
+    {
+        if (!_pageTypeMap.TryGetValue(pageKey, out Type pageType))
         {
-            if (!_pageTypeMap.TryGetValue(pageKey, out Type pageType))
+            return;
+        }
+
+        if (_frame is Frame f)
+        {
+            f.Navigate(pageType, navArgs, ToTransitionInfo(transition));
+            PageNavigated?.Invoke(this, pageKey);
+        }
+    }
+
+    /// <inheritdoc/>
+    public void GoBack(PageTransition transition = PageTransition.None, bool innerFrameGoBack = false)
+    {
+        if (_frame is Frame f && f.CanGoBack)
+        {
+            f.GoBack(ToTransitionInfo(transition));
+
+            if (innerFrameGoBack && _innerNavigator is { } innerNav)
             {
-                return;
+                innerNav.GoBack();
             }
 
-            if (_frame is Frame f)
+            if (GetCurrentPageKey() is { Length: > 0 } key)
             {
-                f.Navigate(pageType, navArgs, ToTransitionInfo(transition));
-                PageNavigated?.Invoke(this, pageKey);
+                PageNavigated?.Invoke(this, key);
             }
         }
+    }
 
-        /// <inheritdoc/>
-        public void GoBack(PageTransition transition = PageTransition.None, bool innerFrameGoBack = false)
+    /// <inheritdoc/>
+    public void GoForward()
+    {
+        if (_frame is Frame f && f.CanGoForward)
         {
-            if (_frame is Frame f && f.CanGoBack)
-            {
-                f.GoBack(ToTransitionInfo(transition));
+            f.GoForward();
 
-                if (innerFrameGoBack && _innerNavigator is { } innerNav)
-                {
-                    innerNav.GoBack();
-                }
+            if (GetCurrentPageKey() is { Length: > 0 } key)
+            {
+                PageNavigated?.Invoke(this, key);
             }
         }
+    }
 
-        /// <inheritdoc/>
-        public void SetInnerNavigator(INavigator inner) => _innerNavigator = inner;
+    /// <inheritdoc/>
+    public void SetInnerNavigator(INavigator inner) => _innerNavigator = inner;
 
-        private NavigationTransitionInfo ToTransitionInfo(PageTransition transition)
+    private NavigationTransitionInfo ToTransitionInfo(PageTransition transition)
+    {
+        return transition switch
         {
-            return transition switch
-            {
-                PageTransition.None => new SuppressNavigationTransitionInfo(),
-                PageTransition.Drill => new DrillInNavigationTransitionInfo(),
-                PageTransition.SlideFromBottom => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom },
-                PageTransition.SlideFromLeft => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromLeft },
-                PageTransition.SlideFromRight => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight },
-                _ => new SuppressNavigationTransitionInfo()
-            };
-        }
+            PageTransition.None => new SuppressNavigationTransitionInfo(),
+            PageTransition.Drill => new DrillInNavigationTransitionInfo(),
+            PageTransition.SlideFromBottom => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromBottom },
+            PageTransition.SlideFromLeft => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromLeft },
+            PageTransition.SlideFromRight => new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight },
+            _ => new SuppressNavigationTransitionInfo()
+        };
     }
 }

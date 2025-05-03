@@ -119,6 +119,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChildPage.xaml.cs">
+      <DependentUpon>ChildPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -144,6 +147,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="ChildPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -158,6 +165,10 @@
     <ProjectReference Include="..\JeniusApps.Common.Uwp\JeniusApps.Common.Uwp.csproj">
       <Project>{3354de16-cd32-4c68-8268-297fa1cdc0e5}</Project>
       <Name>JeniusApps.Common.Uwp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JeniusApps.Common\JeniusApps.Common.csproj">
+      <Project>{815dcba0-659a-4cbc-84df-c763e2c4f45b}</Project>
+      <Name>JeniusApps.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

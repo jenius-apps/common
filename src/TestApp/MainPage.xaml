@@ -13,5 +13,7 @@
         <Button Click="OnPlayWithFadeClicked" Content="Play with fade" />
         <Button Click="OnPauseClicked" Content="Pause" />
         <Button Click="OnPauseWithFadeClicked" Content="Pause with fade" />
+        <Button Click="OnNavigateToChildPage" Content="Navigate to child page" />
+        <Button Click="OnGoForward" Content="Go forward" />
     </StackPanel>
 </Page>
