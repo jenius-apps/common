@@ -12,6 +12,7 @@ namespace JeniusApps.Common.Tools.Uwp;
 public class SystemInfoProvider : ISystemInfoProvider
 {
     private bool? _isWin11;
+    private UISettings? _uiSettings;
 
     /// <inheritdoc/>
     public DateTime FirstUseDate()
@@ -63,5 +64,12 @@ public class SystemInfoProvider : ISystemInfoProvider
     public bool IsOnBatterySaver()
     {
         return PowerManager.EnergySaverStatus == EnergySaverStatus.On;
+    }
+
+    /// <inheritdoc/>
+    public bool IsLeftHandPreference()
+    {
+        _uiSettings ??= new UISettings();
+        return _uiSettings.HandPreference is HandPreference.LeftHanded;
     }
 }

@@ -51,5 +51,11 @@ namespace JeniusApps.Common.Tools
         /// Returns true if the device's battery saver is active.
         /// </summary>
         bool IsOnBatterySaver();
+
+        /// <summary>
+        /// Returns true if the system settings is set to prefer left hand mode.
+        /// Returs false if right hand mode.
+        /// </summary>
+        bool IsLeftHandPreference();
     }
 }

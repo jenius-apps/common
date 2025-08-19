@@ -32,6 +32,8 @@ namespace TestApp
 
             // Add your own wav file here.
             //player.SetUriSource(new Uri("ms-appx:///Assets/tone.wav"), true);
+
+            LeftHandModeStatus.Text = new SystemInfoProvider().IsLeftHandPreference().ToString();
         }
 
         private void OnPlayClicked(object sender, RoutedEventArgs e)
