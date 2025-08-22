@@ -25,6 +25,9 @@ public class WindowsMsalClient : IMsalClient
 
     public WindowsMsalClient(ITelemetry telemetry, string clientId, string authorityUrl)
     {
+        // NOTE: 4.61.0 and higher versiosn of MSAL does NOT support UWP anymore. 
+        // So must always use a version lower than that. 
+
         _telemetry = telemetry;
         _clientId = clientId;
 

@@ -18,5 +18,7 @@
 
         <TextBlock Text="Is left hand mode:" />
         <TextBlock x:Name="LeftHandModeStatus" />
+
+        <Button Click="OnTokenClicked" Content="Token fetch" />
     </StackPanel>
 </Page>

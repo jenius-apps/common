@@ -1,4 +1,6 @@
-﻿using JeniusApps.Common.Tools.Uwp;
+﻿using JeniusApps.Common.Authentication.Uwp;
+using JeniusApps.Common.Telemetry;
+using JeniusApps.Common.Tools.Uwp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,6 +66,15 @@ namespace TestApp
         private void OnGoForward(object sender, RoutedEventArgs e)
         {
             App.Navigator.GoForward();
+        }
+
+        private async void OnTokenClicked(object sender, RoutedEventArgs e)
+        {
+            var msal = new WindowsMsalClient(
+                new AppInsightsTelemetry("", isEnabled: false),
+                "", // Plug in your own test client ID, and DO NOT COMMIT!!
+                WindowsMsalClient.CommonAuthority); // Adjust between common or consumer authority as needed
+            await msal.RequestInteractiveSignIn(new string[] { "User.Read" });
         }
     }
 }
