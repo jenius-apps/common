@@ -75,7 +75,7 @@ public class LocalFileWriter : ILocalFileWriter
 
         string relativeLocalPath = localDirName is null
             ? nameWithExt
-            : $"{localDirName}/{nameWithExt}";
+            : Path.Combine(localDirName, nameWithExt);
 
         if (string.IsNullOrEmpty(relativeLocalPath))
         {
@@ -92,11 +92,18 @@ public class LocalFileWriter : ILocalFileWriter
 
             token.ThrowIfCancellationRequested();
 
+            if (stream.CanSeek)
+            {
+                stream.Position = 0;
+            }
+
             if (targetLocation is not null)
             {
                 using IRandomAccessStream fileStream = await targetLocation.OpenAsync(FileAccessMode.ReadWrite);
-                await stream.CopyToAsync(fileStream.AsStreamForWrite());
+                using Stream outputStream = fileStream.AsStreamForWrite();
+                await stream.CopyToAsync(outputStream);
                 await fileStream.FlushAsync();
+                await outputStream.FlushAsync();
 
                 return targetLocation.Path;
             }
@@ -116,7 +123,7 @@ public class LocalFileWriter : ILocalFileWriter
 
         string relativeLocalPath = localDirName is null
             ? nameWithExt
-            : $"{localDirName}/{nameWithExt}";
+            : Path.Combine(localDirName,nameWithExt);
 
         if (string.IsNullOrEmpty(relativeLocalPath))
         {
