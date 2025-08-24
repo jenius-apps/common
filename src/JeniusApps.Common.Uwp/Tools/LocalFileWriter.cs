@@ -15,6 +15,14 @@ public class LocalFileWriter : ILocalFileWriter
     private readonly ConcurrentDictionary<string, SemaphoreSlim> _semaphores = new();
 
     /// <inheritdoc/>
+    public async Task<Stream?> GetStreamAsync(string absolutePathInLocalStorage, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        StorageFile file = await StorageFile.GetFileFromPathAsync(absolutePathInLocalStorage);
+        return file is null ? null : await file.OpenStreamForReadAsync();
+    }
+
+    /// <inheritdoc/>
     public async Task<bool> DeleteAsync(string absolutePathInLocalStorage, CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
