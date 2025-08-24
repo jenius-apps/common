@@ -48,4 +48,12 @@ public interface ILocalFileWriter
     /// <param name="token">Cancellation token.</param>
     /// <returns>True if successful, false otherwise.</returns>
     Task<bool> DeleteAsync(string absolutePathInLocalStorage, CancellationToken token);
+
+    /// <summary>
+    /// Opens the given file for read and returns the stream.
+    /// </summary>
+    /// <param name="absolutePathInLocalStorage">The absolute path for a file inside local storage.
+    /// <param name="token">Cancellation token.</param>
+    /// <returns>A stream if file was successfully opened. Null, otherwise.</returns>
+    Task<Stream?> GetStreamAsync(string absolutePathInLocalStorage, CancellationToken token);
 }
