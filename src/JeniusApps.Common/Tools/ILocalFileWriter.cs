@@ -52,7 +52,7 @@ public interface ILocalFileWriter
     /// <summary>
     /// Opens the given file for read and returns the stream.
     /// </summary>
-    /// <param name="absolutePathInLocalStorage">The absolute path for a file inside local storage.
+    /// <param name="absolutePathInLocalStorage">The absolute path for a file inside local storage.</param>
     /// <param name="token">Cancellation token.</param>
     /// <returns>A stream if file was successfully opened. Null, otherwise.</returns>
     Task<Stream?> GetStreamAsync(string absolutePathInLocalStorage, CancellationToken token);
