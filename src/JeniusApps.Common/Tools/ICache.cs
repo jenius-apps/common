@@ -94,6 +94,13 @@ public interface ICache<T>
     /// <param name="token">A cancellation token.</param>
     /// <returns>True if the update was successful.</returns>
     Task<bool> UpdateAsync(T newItem, CancellationToken token);
+
+    /// <summary>
+    /// Clears the cache and leaves it blank.
+    /// Subsequent cache calls will operate
+    /// as if the cache was first constructed.
+    /// </summary>
+    void ClearCache();
 }
 
 /// <summary>
