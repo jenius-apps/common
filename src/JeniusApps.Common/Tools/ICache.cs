@@ -100,7 +100,7 @@ public interface ICache<T>
     /// Subsequent cache calls will operate
     /// as if the cache was first constructed.
     /// </summary>
-    void ClearCache();
+    Task ClearCacheAsync();
 }
 
 /// <summary>
