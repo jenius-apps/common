@@ -50,7 +50,8 @@ public class AzureServiceBusPushNotificationStorage : IPushNotificationStorage
             ActionRequested = "unregister",
             DeviceId = deviceId,
             PrimaryLanguageCode = string.Empty,
-            Uri = string.Empty
+            Uri = string.Empty,
+            DeviceData = []
         };
 
         var message = JsonSerializer.Serialize(data, PushNotificationSerializerContext.CaseInsensitive.DeviceRegistrationData);
