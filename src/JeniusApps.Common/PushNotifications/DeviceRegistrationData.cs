@@ -1,4 +1,6 @@
-﻿namespace JeniusApps.Common.PushNotifications;
+﻿using System.Collections.Generic;
+
+namespace JeniusApps.Common.PushNotifications;
 
 /// <summary>
 /// Data to be included when registering a device for push notifications.
@@ -25,4 +27,10 @@ public class DeviceRegistrationData
     /// E.g. zh, zh-CN, or zh-Hant are all valid.
     /// </summary>
     public required string PrimaryLanguageCode { get; init; }
+
+    /// <summary>
+    /// A dictionary of other device properties that can be used for
+    /// push notification targeting.
+    /// </summary>
+    public required Dictionary<string, string> DeviceData { get; init; }
 }

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Diagnostics;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +27,11 @@ public class PushNotificationService : IPushNotificationService
     }
 
     /// <inheritdoc/>
-    public async Task<bool> RegisterAsync(string deviceId, string primaryLanguageCode, CancellationToken ct)
+    public async Task<bool> RegisterAsync(
+        string deviceId,
+        string primaryLanguageCode,
+        CancellationToken ct,
+        Dictionary<string, string>? deviceData = null)
     {
         ct.ThrowIfCancellationRequested();
 
@@ -51,7 +56,8 @@ public class PushNotificationService : IPushNotificationService
             ActionRequested = "register",
             DeviceId = deviceId,
             PrimaryLanguageCode = primaryLanguageCode,
-            Uri = uri
+            Uri = uri,
+            DeviceData = deviceData ?? []
         };
 
         return await _storage.RegisterDeviceAsync(data, ct);
