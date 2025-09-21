@@ -7,7 +7,7 @@
     <AssemblyName>JeniusApps.Common</AssemblyName>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.54-preview</Version>
+    <Version>0.0.55-preview</Version>
     <PackageTags>jeniusapps,apps,common</PackageTags>
     <RepositoryUrl>https://github.com/jenius-apps/common</RepositoryUrl>
     <Authors>Daniel Paulino</Authors>
