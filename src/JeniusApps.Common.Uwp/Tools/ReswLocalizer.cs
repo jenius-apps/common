@@ -12,6 +12,12 @@ public class ReswLocalizer : ILocalizer
     }
 
     /// <inheritdoc/>
+    public string FormatString(string key, params string[] formatParams)
+    {
+        return string.Format(_resourceLoader.GetString(key), formatParams);
+    }
+
+    /// <inheritdoc/>
     public string GetString(string key)
     {
         if (string.IsNullOrEmpty(key))
