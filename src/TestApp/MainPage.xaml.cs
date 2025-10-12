@@ -1,5 +1,6 @@
 ﻿using JeniusApps.Common.Authentication.Uwp;
 using JeniusApps.Common.Telemetry;
+using JeniusApps.Common.Tools;
 using JeniusApps.Common.Tools.Uwp;
 using System;
 using System.Collections.Generic;
@@ -75,6 +76,15 @@ namespace TestApp
                 "", // Plug in your own test client ID, and DO NOT COMMIT!!
                 WindowsMsalClient.CommonAuthority); // Adjust between common or consumer authority as needed
             await msal.RequestInteractiveSignIn(new string[] { "User.Read" });
+        }
+
+        private void OnThemeChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button fe)
+            {
+                AppTheme theme = (AppTheme)fe.Tag;
+                App.ThemeService.ApplyTheme(theme);
+            }
         }
     }
 }

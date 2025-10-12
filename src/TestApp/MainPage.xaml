@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:TestApp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tools="using:JeniusApps.Common.Tools"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
@@ -20,5 +21,18 @@
         <TextBlock x:Name="LeftHandModeStatus" />
 
         <Button Click="OnTokenClicked" Content="Token fetch" />
+
+        <Button
+            Click="OnThemeChanged"
+            Content="Default theme"
+            Tag="{x:Bind tools:AppTheme.Default}" />
+        <Button
+            Click="OnThemeChanged"
+            Content="Light theme"
+            Tag="{x:Bind tools:AppTheme.Light}" />
+        <Button
+            Click="OnThemeChanged"
+            Content="Dark theme"
+            Tag="{x:Bind tools:AppTheme.Dark}" />
     </StackPanel>
 </Page>

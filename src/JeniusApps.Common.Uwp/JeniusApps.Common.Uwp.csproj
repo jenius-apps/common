@@ -151,6 +151,7 @@
     <Compile Include="Tools\NavigatorFactory.cs" />
     <Compile Include="Tools\ReswLocalizer.cs" />
     <Compile Include="Tools\StartupService.cs" />
+    <Compile Include="Tools\AppThemeService.cs" />
     <Compile Include="Tools\ToastService.cs" />
     <Compile Include="Tools\UriLauncher.cs" />
     <Compile Include="Tools\SystemInfoProvider.cs" />

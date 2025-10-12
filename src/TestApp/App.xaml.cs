@@ -1,4 +1,5 @@
-﻿using JeniusApps.Common.Tools.Uwp;
+﻿using JeniusApps.Common.Settings.Uwp;
+using JeniusApps.Common.Tools.Uwp;
 using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel;
@@ -15,6 +16,7 @@ namespace TestApp
     sealed partial class App : Application
     {
         public static Navigator Navigator { get; private set; }
+        public static AppThemeService ThemeService { get; private set; }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -30,6 +32,7 @@ namespace TestApp
                 { nameof(MainPage), typeof(MainPage) },
                 { nameof(ChildPage), typeof(ChildPage) },
             });
+            ThemeService = new AppThemeService(new LocalSettings(new Dictionary<string, object>()));
         }
 
         /// <summary>
@@ -60,6 +63,8 @@ namespace TestApp
             }
 
             Navigator.SetFrame(rootFrame);
+            ThemeService.SetFrame(rootFrame);
+            ThemeService.ApplyTheme();
 
             if (e.PrelaunchActivated == false)
             {
