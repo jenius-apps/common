@@ -19,22 +19,33 @@ public class StoreService : IIapService
     private readonly ConcurrentDictionary<string, StoreProduct> _productsCache = new();
     private readonly ConcurrentDictionary<string, bool> _ownershipCache = new();
     private readonly SemaphoreSlim _versionedProductsLock = new(1, 1);
+    private readonly bool _debugAllOwned;
     private StoreContext? _context;
 
     /// <inheritdoc/>
     public event EventHandler<string>? ProductPurchased;
 
+    /// <param name="subscriptionPrefixes">List of IAP subscription prefixes.</param>
+    /// <param name="lifetimeExactIapIds">List of exact IDs for for lifetime IAPs.</param>
+    /// <param name="debugAllOwned">USE WITH CAUTION. DESIGNED FOR DEBUG SCENARIOS ONLY. If true, all ownership checks return as true.</param>
     public StoreService(
         IReadOnlyList<string> subscriptionPrefixes,
-        IReadOnlyList<string> lifetimeExactIapIds)
+        IReadOnlyList<string> lifetimeExactIapIds,
+        bool debugAllOwned = false)
     {
         _subscriptionPrefixes = subscriptionPrefixes;
         _lifetimeExactIapIds = lifetimeExactIapIds;
+        _debugAllOwned = debugAllOwned;
     }
 
     /// <inheritdoc/>
     public virtual async Task<bool> IsOwnedAsync(string iapIdToCheck)
     {
+        if (_debugAllOwned)
+        {
+            return true;
+        }
+
         if (_ownershipCache.TryGetValue(iapIdToCheck, out bool isOwned))
         {
             return isOwned;
