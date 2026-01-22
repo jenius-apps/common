@@ -51,11 +51,18 @@ public interface IIapService
     bool ContainsSubscriptionPrefix(string id);
 
     /// <summary>
-    /// Retrieves the latest price of the item.
+    /// Retrieves the latest price of the item based on the prefix of the IAP ID.
     /// </summary>
     /// <param name="iapId">An IAP ID whose price we want to check.</param>
     /// <returns>A <see cref="PriceInfo"/> object that contains price data.</returns>
     Task<PriceInfo> GetLatestPriceAsync(string iapId);
+
+    /// <summary>
+    /// Retrieves the price of the item, using the whole ID.
+    /// </summary>
+    /// <param name="iapId">The exact IAP ID whose price we want to check</param>
+    /// <returns>A <see cref="PriceInfo"/> object that contains price data.</returns>
+    Task<PriceInfo> GetPriceAsync(string iapId);
 
     /// <summary>
     /// Returns true if any of the given in-app purchase IDs

@@ -108,10 +108,9 @@ public class StoreService : IIapService
         return false;
     }
 
-    public virtual async Task<PriceInfo> GetLatestPriceAsync(string iapId)
+    public virtual async Task<PriceInfo> GetPriceAsync(string iapId)
     {
-        (string idOnly, _) = SplitIdAndVersion(iapId);
-        var addon = await GetLatestAddonAsync(idOnly).ConfigureAwait(false);
+        var addon = await GetLatestAddonAsync(iapId).ConfigureAwait(false);
 
         if (addon?.Price is null)
         {
@@ -134,6 +133,12 @@ public class StoreService : IIapService
             SubTrialLength = (int)(sku?.SubscriptionInfo?.TrialPeriod ?? 0),
             SubTrialLengthUnit = ToDurationUnit(sku?.SubscriptionInfo?.TrialPeriodUnit),
         };
+    }
+
+    public virtual async Task<PriceInfo> GetLatestPriceAsync(string iapId)
+    {
+        (string idOnly, _) = SplitIdAndVersion(iapId);
+        return await GetPriceAsync(idOnly).ConfigureAwait(false);
     }
 
     private DurationUnit ToDurationUnit(StoreDurationUnit? storeDurationUnit)
