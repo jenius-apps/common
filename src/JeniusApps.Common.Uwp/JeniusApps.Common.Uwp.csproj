@@ -130,6 +130,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>bin\</PackageOutputPath>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE">
