@@ -20,16 +20,16 @@ public interface IIapService
     /// Attempts to buy the IAP item.
     /// </summary>
     /// <param name="iapId">The IAP ID of the add-on we want to purchase.</param>
-    /// <param name="latest">
-    /// We recommend using <see langword="true"/> when trying to buy a subscription,
-    /// so that the latest version is purchased.
+    /// <param name="isSubscriptionIdFormat">
+    /// We recommend using <see langword="true"/> when trying to buy a subscription and if the ID is formatted like 'prefix_versionNumber`,
+    /// so that the latest version is purchased. E.g. ambieplus_4. If the IAP is not a subscription or you want to retrieve price of the exact ID, set to <see langword="false"/>.
     /// </param>
     /// <param name="iapIdCacheOverride">
     /// Optional. The ID to be used when storing the purchase successful result in cache.
     /// Ideal when you have multiple different IAP IDs that point to the same subscription, such as with promo codes.
     /// </param>
     /// <returns>True if the item was purchased successfully.</returns>
-    Task<bool> BuyAsync(string iapId, bool latest = false, string? iapIdCacheOverride = null);
+    Task<bool> BuyAsync(string iapId, bool isSubscriptionIdFormat = false, string? iapIdCacheOverride = null);
 
     /// <summary>
     /// Determines if premium buttons can be displayed.
@@ -51,18 +51,15 @@ public interface IIapService
     bool ContainsSubscriptionPrefix(string id);
 
     /// <summary>
-    /// Retrieves the latest price of the item based on the prefix of the IAP ID.
+    /// Retrieves the price of the item, using the given ID.
     /// </summary>
-    /// <param name="iapId">An IAP ID whose price we want to check.</param>
+    /// <param name="iapId">The IAP ID of the add-on price we want to get.</param>
+    /// <param name="isSubscriptionIdFormat">
+    /// We recommend using <see langword="true"/> when trying to view a subscription and if the ID is formatted like 'prefix_versionNumber`,
+    /// so that the latest version is fetched. E.g. ambieplus_4. If the IAP is not a subscription or you want to retrieve price of the exact ID, set to <see langword="false"/>.
+    /// </param>
     /// <returns>A <see cref="PriceInfo"/> object that contains price data.</returns>
-    Task<PriceInfo> GetLatestPriceAsync(string iapId);
-
-    /// <summary>
-    /// Retrieves the price of the item, using the whole ID.
-    /// </summary>
-    /// <param name="iapId">The exact IAP ID whose price we want to check</param>
-    /// <returns>A <see cref="PriceInfo"/> object that contains price data.</returns>
-    Task<PriceInfo> GetPriceAsync(string iapId);
+    Task<PriceInfo> GetPriceAsync(string iapId, bool isSubscriptionIdFormat = false);
 
     /// <summary>
     /// Returns true if any of the given in-app purchase IDs

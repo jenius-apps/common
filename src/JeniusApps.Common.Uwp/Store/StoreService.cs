@@ -108,9 +108,13 @@ public class StoreService : IIapService
         return false;
     }
 
-    public virtual async Task<PriceInfo> GetPriceAsync(string iapId)
+    /// <inheritdoc/>
+    public virtual async Task<PriceInfo> GetPriceAsync(string iapId, bool isSubscriptionIdFormat = false)
     {
-        var addon = await GetLatestAddonAsync(iapId).ConfigureAwait(false);
+        (string idOnly, _) = SplitIdAndVersion(iapId);
+        var addon = isSubscriptionIdFormat
+            ? await GetLatestAddonAsync(idOnly).ConfigureAwait(false)
+            : await GetAddOnAsync(iapId).ConfigureAwait(false);
 
         if (addon?.Price is null)
         {
@@ -133,12 +137,6 @@ public class StoreService : IIapService
             SubTrialLength = (int)(sku?.SubscriptionInfo?.TrialPeriod ?? 0),
             SubTrialLengthUnit = ToDurationUnit(sku?.SubscriptionInfo?.TrialPeriodUnit),
         };
-    }
-
-    public virtual async Task<PriceInfo> GetLatestPriceAsync(string iapId)
-    {
-        (string idOnly, _) = SplitIdAndVersion(iapId);
-        return await GetPriceAsync(idOnly).ConfigureAwait(false);
     }
 
     private DurationUnit ToDurationUnit(StoreDurationUnit? storeDurationUnit)
@@ -217,9 +215,9 @@ public class StoreService : IIapService
     }
 
     /// <inheritdoc/>
-    public virtual async Task<bool> BuyAsync(string iapId, bool latest = false, string? iapIdCacheOverride = null)
+    public virtual async Task<bool> BuyAsync(string iapId, bool isSubscriptionIdFormat = false, string? iapIdCacheOverride = null)
     {
-        StorePurchaseStatus result = await PurchaseAddOn(iapId, latest).ConfigureAwait(false);
+        StorePurchaseStatus result = await PurchaseAddOn(iapId, isSubscriptionIdFormat).ConfigureAwait(false);
 
         if (result == StorePurchaseStatus.Succeeded || result == StorePurchaseStatus.AlreadyPurchased)
         {
@@ -235,7 +233,7 @@ public class StoreService : IIapService
         };
     }
 
-    private async Task<StorePurchaseStatus> PurchaseAddOn(string id, bool latest = false)
+    private async Task<StorePurchaseStatus> PurchaseAddOn(string id, bool isSubscriptionIdFormat = false)
     {
         if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
         {
@@ -244,7 +242,7 @@ public class StoreService : IIapService
 
         (string idOnly, _) = SplitIdAndVersion(id);
 
-        var addOnProduct = latest
+        var addOnProduct = isSubscriptionIdFormat
             ? await GetLatestAddonAsync(idOnly).ConfigureAwait(false)
             : await GetAddOnAsync(id).ConfigureAwait(false);
 
