@@ -72,4 +72,28 @@ public class SystemInfoProvider : ISystemInfoProvider
         _uiSettings ??= new UISettings();
         return _uiSettings.HandPreference is HandPreference.LeftHanded;
     }
+
+    /// <inheritdoc/>
+    public string CurrentAppVersion()
+    {
+        return SystemInformation.Instance.ApplicationVersion.ToFormattedString();
+    }
+
+    /// <inheritdoc/>
+    public string PreviousAppVersion()
+    {
+        return SystemInformation.Instance.PreviousVersionInstalled.ToFormattedString();
+    }
+
+    /// <inheritdoc/>
+    public string FirstInstalledAppVersion()
+    {
+        return SystemInformation.Instance.FirstVersionInstalled.ToFormattedString();
+    }
+
+    /// <inheritdoc/>
+    public bool WasAppUpdated()
+    {
+        return SystemInformation.Instance.IsAppUpdated;
+    }
 }

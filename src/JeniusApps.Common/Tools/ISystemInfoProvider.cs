@@ -57,5 +57,26 @@ namespace JeniusApps.Common.Tools
         /// Returs false if right hand mode.
         /// </summary>
         bool IsLeftHandPreference();
+
+        /// <summary>
+        /// Gets a value indicating whether the app is being used for the first time since being upgraded from an older version.
+        /// Use this to tell if you should display details about what has changed.
+        /// </summary>
+        bool WasAppUpdated();
+
+        /// <summary>
+        /// App version when this app instance was first installed.
+        /// </summary>
+        string FirstInstalledAppVersion();
+
+        /// <summary>
+        /// Previous app version.
+        /// </summary>
+        string PreviousAppVersion();
+
+        /// <summary>
+        /// Current app version.
+        /// </summary>
+        string CurrentAppVersion();
     }
 }
