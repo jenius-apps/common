@@ -29,6 +29,11 @@ public class DeviceRegistrationData
     public required string PrimaryLanguageCode { get; init; }
 
     /// <summary>
+    /// The user's timezone offset reprsented as a long. Used in the push system to schedule toasts.
+    /// </summary>
+    public long? UtcOffsetTicks { get; init; }
+
+    /// <summary>
     /// A dictionary of other device properties that can be used for
     /// push notification targeting.
     /// </summary>

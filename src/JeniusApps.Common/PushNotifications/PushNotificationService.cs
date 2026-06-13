@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,8 @@ public class PushNotificationService : IPushNotificationService
         string deviceId,
         string primaryLanguageCode,
         CancellationToken ct,
-        Dictionary<string, string>? deviceData = null)
+        Dictionary<string, string>? deviceData = null,
+        TimeSpan? offset = null)
     {
         ct.ThrowIfCancellationRequested();
 
@@ -56,6 +58,7 @@ public class PushNotificationService : IPushNotificationService
             ActionRequested = "register",
             DeviceId = deviceId,
             PrimaryLanguageCode = primaryLanguageCode,
+            UtcOffsetTicks = (offset ?? DateTimeOffset.Now.Offset).Ticks,
             Uri = uri,
             DeviceData = deviceData ?? []
         };
