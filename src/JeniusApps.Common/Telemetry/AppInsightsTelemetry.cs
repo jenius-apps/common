@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.ApplicationInsights;
+﻿using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JeniusApps.Common.Telemetry;
 
@@ -15,6 +15,7 @@ public class AppInsightsTelemetry : ITelemetry
 {
     private readonly TelemetryClient _tc;
     private bool _isEnabled = true;
+    private LogLevel _minimumLogLevel = LogLevel.Basic;
 
     /// <summary>
     /// Initializes class.
@@ -22,12 +23,15 @@ public class AppInsightsTelemetry : ITelemetry
     /// <param name="apiKey">The instrumentation key your AppInsights instance.</param>
     /// <param name="isEnabled">Determines if events will be tracked.</param>
     /// <param name="context">Optional context to add to the telemetry client.</param>
+    /// <param name="minimumLogLevel">The minimum log level to record.</param>
     public AppInsightsTelemetry(
         string apiKey,
         bool isEnabled = true,
-        TelemetryContext? context = null)
+        TelemetryContext? context = null,
+        LogLevel minimumLogLevel = LogLevel.Basic)
     {
         _isEnabled = isEnabled;
+        _minimumLogLevel = minimumLogLevel;
 
         var configuration = new TelemetryConfiguration
         {
@@ -62,38 +66,42 @@ public class AppInsightsTelemetry : ITelemetry
     }
 
     /// <inheritdoc/>
-    public void SetEnabled(bool isEnabled) => _isEnabled = isEnabled; 
+    public void SetEnabled(bool isEnabled) => _isEnabled = isEnabled;
+
+    /// <inheritdoc/>
+    public void SetMinimumLogLevel(LogLevel logLevel) => _minimumLogLevel = logLevel; 
 
     /// <inheritdoc/>
     public void TrackError(
         Exception e,
         IDictionary<string, string>? properties = null,
-        IDictionary<string, double>? metrics = null)
+        IDictionary<string, double>? metrics = null,
+        LogLevel logLevel = LogLevel.Critical)
     {
-        _tc.TrackException(e, properties, metrics);
+        if (_isEnabled && logLevel >= _minimumLogLevel)
+        {
+            _tc.TrackException(e, properties, metrics);
+        }
     }
 
     /// <inheritdoc/>
     public void TrackEvent(string eventName,
         IDictionary<string, string>? properties = null,
-        IDictionary<string, double>? metrics = null)
+        IDictionary<string, double>? metrics = null,
+        LogLevel logLevel = LogLevel.Basic)
     {
-        if (!_isEnabled)
+        if (_isEnabled && logLevel >= _minimumLogLevel)
         {
-            return;
+            _tc.TrackEvent(eventName, properties, metrics);
         }
-
-        _tc.TrackEvent(eventName, properties, metrics);
     }
 
     /// <inheritdoc/>
-    public void TrackPageView(string page)
+    public void TrackPageView(string page, LogLevel logLevel = LogLevel.Basic)
     {
-        if (!_isEnabled)
+        if (_isEnabled && logLevel >= _minimumLogLevel)
         {
-            return;
+            _tc.TrackPageView(page);
         }
-
-        _tc.TrackPageView(page);
     }
 }
