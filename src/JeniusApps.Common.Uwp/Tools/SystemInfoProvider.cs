@@ -1,6 +1,8 @@
 ﻿using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System;
 using Windows.System.Power;
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
@@ -95,5 +97,27 @@ public class SystemInfoProvider : ISystemInfoProvider
     public bool WasAppUpdated()
     {
         return SystemInformation.Instance.IsAppUpdated;
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> IsAppInstalledAsync(string packageFamilyName)
+    {
+        try
+        {
+            LaunchQuerySupportStatus result = await Launcher.QueryUriSupportAsync(
+                new Uri("myapp://"),
+                LaunchQuerySupportType.Uri,
+                packageFamilyName);
+
+            return result switch
+            {
+                LaunchQuerySupportStatus.Available or LaunchQuerySupportStatus.NotSupported => true,
+                _ => false,
+            };
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

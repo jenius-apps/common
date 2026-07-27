@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace JeniusApps.Common.Tools
 {
@@ -78,5 +79,11 @@ namespace JeniusApps.Common.Tools
         /// Current app version.
         /// </summary>
         string CurrentAppVersion();
+
+        /// <summary>
+        /// Returns a bool representing whether the given app is installed.
+        /// </summary>
+        /// <param name="packageFamilyName">The package family name of the app we are checking.</param>
+        Task<bool> IsAppInstalledAsync(string packageFamilyName);
     }
 }
