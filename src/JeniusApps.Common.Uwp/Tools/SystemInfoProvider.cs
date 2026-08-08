@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.Helpers;
+﻿using Microsoft.Toolkit.Uwp.Connectivity;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -119,5 +120,17 @@ public class SystemInfoProvider : ISystemInfoProvider
         {
             return false;
         }
+    }
+
+    /// <inheritdoc/>
+    public bool IsInternetAvailable()
+    {
+        return NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable;
+    }
+
+    /// <inheritdoc/>
+    public bool IsInternetOnMeteredConnection()
+    {
+        return NetworkHelper.Instance.ConnectionInformation.IsInternetOnMeteredConnection;
     }
 }

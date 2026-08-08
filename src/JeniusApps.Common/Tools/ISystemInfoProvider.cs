@@ -85,5 +85,15 @@ namespace JeniusApps.Common.Tools
         /// </summary>
         /// <param name="packageFamilyName">The package family name of the app we are checking.</param>
         Task<bool> IsAppInstalledAsync(string packageFamilyName);
+
+        /// <summary>
+        /// Gets a value indicating whether if the current internet connection is metered.
+        /// </summary>
+        bool IsInternetOnMeteredConnection();
+
+        /// <summary>
+        /// Gets a value indicating whether internet is available across all connections.
+        /// </summary>
+        bool IsInternetAvailable();
     }
 }
