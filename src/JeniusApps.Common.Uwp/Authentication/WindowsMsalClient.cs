@@ -21,7 +21,7 @@ public class WindowsMsalClient : IMsalClient
     private readonly string _clientId;
     private readonly IPublicClientApplication _msalSdkClient;
 
-    public event EventHandler<string?>? InteractiveSignInCompleted;
+    public event EventHandler<AuthenticationResult?>? InteractiveSignInCompleted;
 
     public WindowsMsalClient(ITelemetry telemetry, string clientId, string authorityUrl)
     {
@@ -47,7 +47,7 @@ public class WindowsMsalClient : IMsalClient
     }
 
     /// <inheritdoc/>
-    public async Task<string?> GetTokenSilentAsync(string[] scopes)
+    public async Task<AuthenticationResult?> GetTokenSilentAsync(string[] scopes)
     {
         try
         {
@@ -56,7 +56,7 @@ public class WindowsMsalClient : IMsalClient
             var authResult = await _msalSdkClient
                 .AcquireTokenSilent(scopes, firstAccount)
                 .ExecuteAsync();
-            return authResult.AccessToken;
+            return authResult;
         }
         catch (MsalUiRequiredException)
         {
@@ -79,7 +79,7 @@ public class WindowsMsalClient : IMsalClient
             // no internet
         }
 
-        return "";
+        return null;
     }
 
     /// <inheritdoc/>
@@ -95,15 +95,15 @@ public class WindowsMsalClient : IMsalClient
             }
 
             var authResult = await builder.ExecuteAsync();
-            InteractiveSignInCompleted?.Invoke(this, authResult?.AccessToken);
+            InteractiveSignInCompleted?.Invoke(this, authResult);
         }
         catch (MsalException e) when (e.ErrorCode == "authentication_canceled")
         {
-            InteractiveSignInCompleted?.Invoke(this, string.Empty);
+            InteractiveSignInCompleted?.Invoke(this, null);
         }
         catch (MsalException e)
         {
-            InteractiveSignInCompleted?.Invoke(this, string.Empty);
+            InteractiveSignInCompleted?.Invoke(this, null);
 
             _telemetry.TrackError(e, new Dictionary<string, string>
             {

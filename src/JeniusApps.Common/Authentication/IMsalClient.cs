@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Identity.Client;
+using System;
 using System.Threading.Tasks;
 
 namespace JeniusApps.Common.Authentication;
@@ -14,7 +15,7 @@ public interface IMsalClient
     /// String is the access token if successful. Null or empty
     /// otherwise.
     /// </summary>
-    event EventHandler<string?>? InteractiveSignInCompleted;
+    event EventHandler<AuthenticationResult?>? InteractiveSignInCompleted;
 
     /// <summary>
     /// Attempts to sign in silently and retrieve a token
@@ -22,7 +23,7 @@ public interface IMsalClient
     /// Returns null if silent auth was unsuccessful.
     /// </summary>
     /// <returns>A token if sign in was successful, and null if not.</returns>
-    Task<string?> GetTokenSilentAsync(string[] scopes);
+    Task<AuthenticationResult?> GetTokenSilentAsync(string[] scopes);
 
     /// <summary>
     /// Attempts to sign in and retrieve at token. User will be prompted.
