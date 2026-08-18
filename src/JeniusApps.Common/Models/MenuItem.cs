@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace JeniusApps.Common.Models;
 
@@ -90,4 +91,9 @@ public partial class MenuItem : ObservableObject
     /// Subtitle text to display in a tooltip.
     /// </summary>
     public string ToolTipSubtitle { get; } = string.Empty;
+
+    /// <summary>
+    /// List of sub menu items.
+    /// </summary>
+    public ObservableCollection<MenuItem> SubMenuItems { get; } = [];
 }
