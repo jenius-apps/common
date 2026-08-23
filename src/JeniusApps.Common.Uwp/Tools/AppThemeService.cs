@@ -1,4 +1,5 @@
 ﻿using JeniusApps.Common.Settings;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,6 +13,8 @@ public sealed class AppThemeService : IAppThemeService
     private readonly string _themeSettingsKey;
     private Frame? _frame;
 
+    public event EventHandler<bool>? ActualThemeChanged;
+
     public AppThemeService(
         IUserSettings userSettings,
         string themeSettingsKey = "themeSetting")
@@ -23,9 +26,15 @@ public sealed class AppThemeService : IAppThemeService
     /// <inheritdoc/>
     public void SetFrame(object frame)
     {
-        if (frame is Frame f)
+        if (_frame is Frame oldFrame)
         {
-            _frame = f;
+            oldFrame.ActualThemeChanged -= OnFrameThemeChanged;
+        }
+
+        if (frame is Frame newFrame)
+        {
+            _frame = newFrame;
+            _frame.ActualThemeChanged += OnFrameThemeChanged;
         }
     }
 
@@ -56,6 +65,22 @@ public sealed class AppThemeService : IAppThemeService
     public AppTheme GetAppTheme()
     {
         return ToAppTheme(_userSettings.Get<string>(_themeSettingsKey));
+    }
+
+    /// <inheritdoc/>
+    public bool IsDark()
+    {
+        if (_frame is null)
+        {
+            return false;
+        }
+
+        return _frame.ActualTheme is ElementTheme.Dark;
+    }
+
+    private void OnFrameThemeChanged(FrameworkElement sender, object args)
+    {
+        ActualThemeChanged?.Invoke(sender, sender.ActualTheme is ElementTheme.Dark);
     }
 
     private static ElementTheme ToElementTheme(AppTheme appTheme)

@@ -1,10 +1,18 @@
-﻿namespace JeniusApps.Common.Tools;
+﻿using System;
+
+namespace JeniusApps.Common.Tools;
 
 /// <summary>
 /// Interface for managing the app's theme.
 /// </summary>
 public interface IAppThemeService
 {
+    /// <summary>
+    /// Raised when the frame's actual theme has changed.
+    /// True = dark mode, false otherwise.
+    /// </summary>
+    event EventHandler<bool>? ActualThemeChanged;
+
     /// <summary>
     /// Sets the frame of the app whose theme can be changed.
     /// </summary>
@@ -27,6 +35,11 @@ public interface IAppThemeService
     /// </summary>
     /// <returns>The app theme from settings.</returns>
     AppTheme GetAppTheme();
+
+    /// <summary>
+    /// Returns if the current actual theme is dark mode.
+    /// </summary>
+    bool IsDark();
 }
 
 /// <summary>
