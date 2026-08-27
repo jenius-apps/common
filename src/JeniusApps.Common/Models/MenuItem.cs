@@ -19,6 +19,8 @@ public partial class MenuItem : ObservableObject
     /// <param name="tooltipText">Text to display in a tooltip.</param>
     /// <param name="tooltipSubtitle">Subtitle text to display in a tooltip.</param>
     /// <param name="automationName">The text to be used for the menu item's AutomationProperties.Name.</param>
+    /// <param name="keyboardShortcut">An integer representing the keyboard shortcut.</param>
+    /// <param name="keyboardShortcutModifier">An unsigned integer representing the keyboard shortcut modifier.</param>
     public MenuItem(
         IRelayCommand asyncRelayCommand,
         string text,
@@ -26,7 +28,9 @@ public partial class MenuItem : ObservableObject
         string? tag = null,
         string? tooltipText = null,
         string? tooltipSubtitle = null,
-        string? automationName = null)
+        string? automationName = null,
+        int keyboardShortcut = 0,
+        uint keyboardShortcutModifier = 0u)
     {
         ActionCommand = asyncRelayCommand;
         Text = text;
@@ -35,6 +39,8 @@ public partial class MenuItem : ObservableObject
         AutomationName = automationName ?? text;
         ToolTipText = tooltipText ?? text;
         ToolTipSubtitle = tooltipSubtitle ?? string.Empty;
+        KeyboardShortcutIndex = keyboardShortcut;
+        KeyboardShortcutModifierIndex = keyboardShortcutModifier;
     }
 
     /// <summary>
@@ -80,7 +86,8 @@ public partial class MenuItem : ObservableObject
     /// <summary>
     /// The menu's icon.
     /// </summary>
-    public string Glyph { get; } = string.Empty;
+    [ObservableProperty]
+    private string _glyph = string.Empty;
 
     /// <summary>
     /// Text to display in a tooltip.
@@ -96,4 +103,16 @@ public partial class MenuItem : ObservableObject
     /// List of sub menu items.
     /// </summary>
     public ObservableCollection<MenuItem> SubMenuItems { get; } = [];
+
+    /// <summary>
+    /// Integer representing a keybardo shortcut index.
+    /// Inteded for use with Windows.System.VirtualKey.
+    /// </summary>
+    public int KeyboardShortcutIndex { get; }
+
+    /// <summary>
+    /// Unsigned integer representing modifiers.
+    /// Intended for use with Windows.System.VirtualKeyModifiers.
+    /// </summary>
+    public uint KeyboardShortcutModifierIndex { get; }
 }
